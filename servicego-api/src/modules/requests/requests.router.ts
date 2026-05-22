@@ -34,7 +34,7 @@ requestsRouter.patch(
     try {
       const input = updateRequestStatusSchema.parse(req.body);
       const request = await requestsService.updateRequestStatus(
-        req.params.id,
+        req.params.id as string,
         req.user!.sub,
         req.user!.role,
         input,

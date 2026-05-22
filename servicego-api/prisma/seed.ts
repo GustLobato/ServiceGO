@@ -4,40 +4,43 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Seeding database...');
+  console.log('🌱 Seeding database (idempotent)...');
 
-  // Limpa dados existentes
-  await prisma.review.deleteMany();
-  await prisma.request.deleteMany();
-  await prisma.listing.deleteMany();
-  await prisma.user.deleteMany();
+  const hashedPassword = await bcrypt.hash('senha123', 12);
 
-  // Cria usuários
-  const [client, provider] = await Promise.all([
-    prisma.user.create({
-      data: {
-        name: 'João Silva',
-        email: 'joao@example.com',
-        password: await bcrypt.hash('senha123', 12),
-        role: 'client',
-        phone: '(11) 99999-1111',
-      },
-    }),
-    prisma.user.create({
-      data: {
-        name: 'Maria Santos',
-        email: 'maria@example.com',
-        password: await bcrypt.hash('senha123', 12),
-        role: 'provider',
-        phone: '(11) 99999-2222',
-        bio: 'Especialista em limpeza residencial com 5 anos de experiência.',
-      },
-    }),
-  ]);
+  // Upsert users (keyed on unique email)
+  const client = await prisma.user.upsert({
+    where: { email: 'joao@example.com' },
+    update: {},
+    create: {
+      name: 'João Silva',
+      email: 'joao@example.com',
+      password: hashedPassword,
+      role: 'client',
+      phone: '(11) 99999-1111',
+    },
+  });
 
-  // Cria listings
-  const listing = await prisma.listing.create({
-    data: {
+  const provider = await prisma.user.upsert({
+    where: { email: 'maria@example.com' },
+    update: {},
+    create: {
+      name: 'Maria Santos',
+      email: 'maria@example.com',
+      password: hashedPassword,
+      role: 'provider',
+      phone: '(11) 99999-2222',
+      bio: 'Especialista em limpeza residencial com 5 anos de experiência.',
+    },
+  });
+
+  // Upsert listing — use a deterministic ID so we can upsert
+  const LISTING_ID = 'seed-listing-001';
+  const listing = await prisma.listing.upsert({
+    where: { id: LISTING_ID },
+    update: {},
+    create: {
+      id: LISTING_ID,
       title: 'Limpeza Residencial Completa',
       description:
         'Serviço completo de limpeza para sua casa. Inclui todos os cômodos, organização e produto de limpeza incluso.',
@@ -49,9 +52,13 @@ async function main() {
     },
   });
 
-  // Cria request
-  const request = await prisma.request.create({
-    data: {
+  // Upsert request
+  const REQUEST_ID = 'seed-request-001';
+  const request = await prisma.request.upsert({
+    where: { id: REQUEST_ID },
+    update: {},
+    create: {
+      id: REQUEST_ID,
       clientId: client.id,
       listingId: listing.id,
       message: 'Preciso de limpeza para sábado de manhã.',
@@ -60,9 +67,13 @@ async function main() {
     },
   });
 
-  // Cria review
-  const review = await prisma.review.create({
-    data: {
+  // Upsert review (requestId is @unique, so we can use it)
+  const REVIEW_ID = 'seed-review-001';
+  const review = await prisma.review.upsert({
+    where: { id: REVIEW_ID },
+    update: {},
+    create: {
+      id: REVIEW_ID,
       clientId: client.id,
       listingId: listing.id,
       requestId: request.id,
@@ -71,7 +82,7 @@ async function main() {
     },
   });
 
-  // Atualiza rating do listing
+  // Update listing rating
   await prisma.listing.update({
     where: { id: listing.id },
     data: { rating: 5, reviewCount: 1 },

@@ -33,7 +33,7 @@ export async function getListings(query: ListingQuery) {
       orderBy: { createdAt: 'desc' },
       include: {
         provider: {
-          select: { id: true, name: true, avatarUrl: true, rating: false },
+          select: { id: true, name: true, avatarUrl: true },
         },
       },
     }),

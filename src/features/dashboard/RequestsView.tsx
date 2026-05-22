@@ -1,5 +1,5 @@
 /**
- * RequestsView — view completa de todas as solicitações com filtros.
+ * RequestsView — view completa de todas as solicitações com filtros e ações.
  */
 import { Input } from "@/components/ui/input";
 import {
@@ -18,6 +18,8 @@ interface RequestsViewProps {
   onSearchChange: (q: string) => void;
   statusFilter: string;
   onStatusFilterChange: (v: string) => void;
+  userRole?: "cliente" | "prestador";
+  onUpdateStatus?: (id: string, status: string) => void;
 }
 
 const RequestsView = ({
@@ -26,6 +28,8 @@ const RequestsView = ({
   onSearchChange,
   statusFilter,
   onStatusFilterChange,
+  userRole,
+  onUpdateStatus,
 }: RequestsViewProps) => (
   <>
     <div className="flex items-center justify-between mb-6">
@@ -48,6 +52,7 @@ const RequestsView = ({
           <SelectItem value="aceita">Aceita</SelectItem>
           <SelectItem value="em_andamento">Em andamento</SelectItem>
           <SelectItem value="concluida">Concluída</SelectItem>
+          <SelectItem value="cancelada">Cancelada</SelectItem>
         </SelectContent>
       </Select>
     </div>
@@ -61,7 +66,11 @@ const RequestsView = ({
       />
     </div>
 
-    <RequestList requests={filteredRequests} />
+    <RequestList
+      requests={filteredRequests}
+      userRole={userRole}
+      onUpdateStatus={onUpdateStatus}
+    />
   </>
 );
 

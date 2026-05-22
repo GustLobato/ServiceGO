@@ -5,7 +5,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
-import { hashPassword, verifyPassword } from "@/lib/crypto";
+import { api, getToken, setToken, removeToken, roleToPt } from "@/lib/api";
 
 export type UserRole = "cliente" | "prestador";
 
@@ -14,11 +14,9 @@ export interface AuthUser {
   name: string;
   email: string;
   role: UserRole;
-}
-
-/** Estrutura interna com hash da senha — nunca exposta fora deste arquivo */
-interface StoredUser extends AuthUser {
-  passwordHash: string;
+  phone?: string;
+  bio?: string;
+  avatarUrl?: string;
 }
 
 interface AuthContextType {
@@ -32,12 +30,10 @@ interface AuthContextType {
     role: UserRole
   ) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
-
-const STORAGE_KEY_SESSION = "servicego_user";
-const STORAGE_KEY_USERS = "servicego_users";
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
@@ -45,103 +41,80 @@ export const useAuth = () => {
   return ctx;
 };
 
+/** Maps the API user object to our frontend AuthUser */
+function mapUser(u: Record<string, unknown>): AuthUser {
+  return {
+    id: u.id as string,
+    name: u.name as string,
+    email: u.email as string,
+    role: roleToPt(u.role as string) as UserRole,
+    phone: (u.phone as string) ?? undefined,
+    bio: (u.bio as string) ?? undefined,
+    avatarUrl: (u.avatarUrl as string) ?? undefined,
+  };
+}
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Rehydrate session from localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY_SESSION);
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored) as AuthUser);
-      } catch {
-        localStorage.removeItem(STORAGE_KEY_SESSION);
-      }
+  // Refresh user data from API
+  const refreshUser = async (): Promise<void> => {
+    const token = getToken();
+    if (!token) {
+      setUser(null);
+      return;
     }
-    setIsLoading(false);
+    try {
+      const data = await api.get<Record<string, unknown>>("/api/auth/me");
+      setUser(mapUser(data));
+    } catch {
+      removeToken();
+      setUser(null);
+    }
+  };
+
+  // Rehydrate session — validate stored JWT via /api/auth/me
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
+    refreshUser().finally(() => setIsLoading(false));
   }, []);
 
   const login = async (email: string, password: string): Promise<void> => {
-    // Simula latência de API
-    await new Promise((r) => setTimeout(r, 800));
-
-    const users: StoredUser[] = JSON.parse(
-      localStorage.getItem(STORAGE_KEY_USERS) || "[]"
+    const data = await api.post<{ user: Record<string, unknown>; token: string }>(
+      "/api/auth/login",
+      { email, password },
     );
-
-    const found = users.find((u) => u.email === email);
-
-    // ✅ Verifica existência e senha — não cria usuário fantasma
-    if (!found) {
-      throw new Error("E-mail não encontrado. Verifique ou crie uma conta.");
-    }
-
-    const passwordOk = await verifyPassword(password, found.passwordHash);
-    if (!passwordOk) {
-      throw new Error("Senha incorreta. Tente novamente.");
-    }
-
-    // Expõe apenas campos públicos na sessão
-    const authUser: AuthUser = {
-      id: found.id,
-      name: found.name,
-      email: found.email,
-      role: found.role,
-    };
-
-    setUser(authUser);
-    localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(authUser));
+    setToken(data.token);
+    setUser(mapUser(data.user));
   };
 
   const signup = async (
     name: string,
     email: string,
     password: string,
-    role: UserRole
+    role: UserRole,
   ): Promise<void> => {
-    await new Promise((r) => setTimeout(r, 800));
-
-    const users: StoredUser[] = JSON.parse(
-      localStorage.getItem(STORAGE_KEY_USERS) || "[]"
+    const roleEn = role === "prestador" ? "provider" : "client";
+    const data = await api.post<{ user: Record<string, unknown>; token: string }>(
+      "/api/auth/register",
+      { name, email, password, role: roleEn },
     );
-
-    if (users.some((u) => u.email === email)) {
-      throw new Error("E-mail já cadastrado.");
-    }
-
-    // ✅ Armazena hash SHA-256, nunca a senha em plaintext
-    const passwordHash = await hashPassword(password);
-
-    const newStoredUser: StoredUser = {
-      id: crypto.randomUUID(),
-      name,
-      email,
-      role,
-      passwordHash,
-    };
-
-    users.push(newStoredUser);
-    localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
-
-    const authUser: AuthUser = {
-      id: newStoredUser.id,
-      name,
-      email,
-      role,
-    };
-
-    setUser(authUser);
-    localStorage.setItem(STORAGE_KEY_SESSION, JSON.stringify(authUser));
+    setToken(data.token);
+    setUser(mapUser(data.user));
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem(STORAGE_KEY_SESSION);
+    removeToken();
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, signup, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

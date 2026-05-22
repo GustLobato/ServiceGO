@@ -3,8 +3,8 @@
  * Exibe estatísticas e as últimas solicitações.
  */
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -27,9 +27,10 @@ import {
 import { Plus } from "lucide-react";
 import StatsGrid from "./components/StatsGrid";
 import RequestList from "./components/RequestList";
-import { CATEGORIES, type NewRequestForm } from "./hooks/useRequests";
+import { type NewRequestForm } from "./hooks/useRequests";
 import type { SidebarView } from "./types";
-import type { ServiceRequest } from "@/data/mockData";
+import { type ServiceRequest, type Listing } from "@/data/mockData";
+import { api } from "@/lib/api";
 
 interface DashboardHomeProps {
   userName: string;
@@ -37,6 +38,16 @@ interface DashboardHomeProps {
   recentRequests: ServiceRequest[];
   onNavigate: (view: SidebarView) => void;
   onCreateRequest: (form: NewRequestForm) => boolean;
+  userRole?: "cliente" | "prestador";
+  onUpdateStatus?: (id: string, status: string) => void;
+}
+
+interface ListingsResponse {
+  listings: Listing[];
+  total: number;
+  page: number;
+  limit: number;
+  pages: number;
 }
 
 const DashboardHome = ({
@@ -45,18 +56,26 @@ const DashboardHome = ({
   recentRequests,
   onNavigate,
   onCreateRequest,
+  userRole,
+  onUpdateStatus,
 }: DashboardHomeProps) => {
   const [newRequest, setNewRequest] = useState<NewRequestForm>({
-    service: "",
-    category: "",
-    description: "",
+    listingId: "",
+    message: "",
   });
   const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Fetch available listings to populate the request dropdown
+  const { data: listingsData } = useQuery({
+    queryKey: ["listings", "all-modal"],
+    queryFn: () => api.get<ListingsResponse>("/api/listings?limit=100"),
+  });
+  const listings = listingsData?.listings ?? [];
 
   const handleCreate = () => {
     const ok = onCreateRequest(newRequest);
     if (ok) {
-      setNewRequest({ service: "", category: "", description: "" });
+      setNewRequest({ listingId: "", message: "" });
       setDialogOpen(false);
     }
   };
@@ -83,49 +102,38 @@ const DashboardHome = ({
             <DialogHeader>
               <DialogTitle>Nova Solicitação de Serviço</DialogTitle>
               <DialogDescription>
-                Preencha os dados para criar uma nova solicitação.
+                Preencha os dados para criar uma nova solicitação a um profissional.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="req-service">Serviço *</Label>
-                <Input
-                  id="req-service"
-                  placeholder="Ex: Reparo de encanamento"
-                  value={newRequest.service}
-                  onChange={(e) =>
-                    setNewRequest((p) => ({ ...p, service: e.target.value }))
-                  }
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="req-category">Categoria *</Label>
+                <Label htmlFor="req-listing">Serviço Disponível *</Label>
                 <Select
-                  value={newRequest.category}
+                  value={newRequest.listingId}
                   onValueChange={(v) =>
-                    setNewRequest((p) => ({ ...p, category: v }))
+                    setNewRequest((p) => ({ ...p, listingId: v }))
                   }
                 >
-                  <SelectTrigger id="req-category">
-                    <SelectValue placeholder="Selecione uma categoria" />
+                  <SelectTrigger id="req-listing">
+                    <SelectValue placeholder="Selecione um serviço anunciado" />
                   </SelectTrigger>
                   <SelectContent>
-                    {CATEGORIES.map((c) => (
-                      <SelectItem key={c} value={c}>
-                        {c}
+                    {listings.map((l) => (
+                      <SelectItem key={l.id} value={l.id}>
+                        {l.title} (R$ {l.price.toFixed(2)} - por {l.provider.name})
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="req-description">Descrição</Label>
+                <Label htmlFor="req-message">Mensagem / Instruções</Label>
                 <Textarea
-                  id="req-description"
-                  placeholder="Descreva o que precisa..."
-                  value={newRequest.description}
+                  id="req-message"
+                  placeholder="Descreva o que precisa ou deixe uma mensagem para o profissional..."
+                  value={newRequest.message}
                   onChange={(e) =>
-                    setNewRequest((p) => ({ ...p, description: e.target.value }))
+                    setNewRequest((p) => ({ ...p, message: e.target.value }))
                   }
                 />
               </div>
@@ -134,7 +142,6 @@ const DashboardHome = ({
               <DialogClose asChild>
                 <Button variant="outline">Cancelar</Button>
               </DialogClose>
-              {/* Não usa DialogClose aqui para poder controlar o fechamento via lógica */}
               <Button onClick={handleCreate}>Criar Solicitação</Button>
             </DialogFooter>
           </DialogContent>
@@ -148,6 +155,8 @@ const DashboardHome = ({
         description="Acompanhe suas últimas solicitações de serviço"
         requests={recentRequests.slice(0, 5)}
         onViewAll={() => onNavigate("solicitacoes")}
+        userRole={userRole}
+        onUpdateStatus={onUpdateStatus}
       />
     </>
   );

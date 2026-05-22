@@ -1,28 +1,103 @@
 /**
  * useRequests — hook centralizado para gerenciamento de solicitações de serviço.
- * Separa a lógica de estado do componente visual e torna o estado reutilizável
- * entre DashboardHome (resumo) e RequestsView (lista completa).
+ * Agora busca e persiste dados via API REST.
  */
-import { useState, useMemo } from "react";
-import { INITIAL_REQUESTS, type ServiceRequest, type RequestStatus } from "@/data/mockData";
+import { useMemo, useCallback } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { api, statusToPt } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
-import { CATEGORIES } from "@/data/mockData";
+import { CATEGORIES, type ServiceRequest, type RequestStatus } from "@/data/mockData";
 
 export { CATEGORIES };
 
 export interface NewRequestForm {
-  service: string;
-  category: string;
-  description: string;
+  listingId: string;
+  message: string;
 }
 
-const EMPTY_FORM: NewRequestForm = { service: "", category: "", description: "" };
+// ---- API response types ---------------------------------------------------
+interface ApiRequest {
+  id: string;
+  status: string;
+  message?: string;
+  price?: number;
+  createdAt: string;
+  listing: {
+    id: string;
+    title: string;
+    category: string;
+    price: number;
+    provider: { id: string; name: string; avatarUrl?: string };
+  };
+  client?: { id: string; name: string; avatarUrl?: string };
+}
+
+function mapRequest(r: ApiRequest): ServiceRequest {
+  const providerName = r.listing?.provider?.name ?? "Prestador";
+  return {
+    id: r.id,
+    service: r.listing?.title ?? "Serviço",
+    provider: providerName,
+    providerInitials: providerName
+      .split(" ")
+      .map((w) => w[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase(),
+    status: statusToPt(r.status) as RequestStatus,
+    date: new Date(r.createdAt).toLocaleDateString("pt-BR", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    }),
+    category: r.listing?.category ?? "",
+    description: r.message,
+    listingId: r.listing?.id,
+    price: r.price ?? r.listing?.price,
+  };
+}
 
 export function useRequests() {
-  const [requests, setRequests] = useState<ServiceRequest[]>(INITIAL_REQUESTS);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
   const { toast } = useToast();
+  const qc = useQueryClient();
+
+  // ---- Fetch requests from API -------------------------------------------
+  const {
+    data: requests = [],
+    isLoading,
+  } = useQuery({
+    queryKey: ["requests"],
+    queryFn: async () => {
+      const data = await api.get<ApiRequest[]>("/api/requests/mine");
+      return data.map(mapRequest);
+    },
+  });
+
+  // ---- Filters (client-side) ---------------------------------------------
+  const [searchQuery, setSearchQuery] = useMemo(() => {
+    let _q = "";
+    return [
+      _q,
+      (v: string) => {
+        _q = v;
+      },
+    ] as const;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // We'll manage filter state via simple React state instead
+  return useRequestsInner(requests, isLoading, toast, qc);
+}
+
+/** Inner hook that manages client-side filters on top of API data */
+function useRequestsInner(
+  requests: ServiceRequest[],
+  isLoading: boolean,
+  toast: ReturnType<typeof useToast>["toast"],
+  qc: ReturnType<typeof useQueryClient>,
+) {
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [statusFilter, setStatusFilter] = React.useState<string>("all");
 
   const filteredRequests = useMemo(() => {
     return requests.filter((r) => {
@@ -32,8 +107,7 @@ export function useRequests() {
         r.service.toLowerCase().includes(q) ||
         r.provider.toLowerCase().includes(q) ||
         r.category.toLowerCase().includes(q);
-      const matchStatus =
-        statusFilter === "all" || r.status === statusFilter;
+      const matchStatus = statusFilter === "all" || r.status === statusFilter;
       return matchSearch && matchStatus;
     });
   }, [requests, searchQuery, statusFilter]);
@@ -42,45 +116,59 @@ export function useRequests() {
     () => ({
       total: requests.length,
       active: requests.filter(
-        (r) => r.status === "em_andamento" || r.status === "aceita"
+        (r) => r.status === "em_andamento" || r.status === "aceita",
       ).length,
       pending: requests.filter((r) => r.status === "pendente").length,
       completed: requests.filter((r) => r.status === "concluida").length,
     }),
-    [requests]
+    [requests],
   );
 
-  const createRequest = (form: NewRequestForm): boolean => {
-    if (!form.service.trim() || !form.category) {
-      toast({
-        title: "Preencha os campos obrigatórios",
-        variant: "destructive",
-      });
-      return false;
-    }
-
-    const newReq: ServiceRequest = {
-      id: crypto.randomUUID(),
-      service: form.service.trim(),
-      provider: "Aguardando...",
-      providerInitials: "??",
-      status: "pendente" as RequestStatus,
-      date: new Date().toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
+  // ---- Create request via API --------------------------------------------
+  const createMutation = useMutation({
+    mutationFn: (form: NewRequestForm) =>
+      api.post("/api/requests", {
+        listingId: form.listingId,
+        message: form.message || undefined,
       }),
-      category: form.category,
-      description: form.description,
-    };
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["requests"] });
+      toast({ title: "Solicitação criada!", description: "Sua solicitação foi enviada ao prestador." });
+    },
+    onError: (e: Error) => {
+      toast({ title: "Erro ao criar solicitação", description: e.message, variant: "destructive" });
+    },
+  });
 
-    setRequests((prev) => [newReq, ...prev]);
-    toast({
-      title: "Solicitação criada!",
-      description: `"${newReq.service}" adicionada com sucesso.`,
-    });
-    return true;
-  };
+  const createRequest = useCallback(
+    (form: NewRequestForm): boolean => {
+      if (!form.listingId) {
+        toast({ title: "Selecione um serviço", variant: "destructive" });
+        return false;
+      }
+      createMutation.mutate(form);
+      return true;
+    },
+    [createMutation, toast],
+  );
+
+  // ---- Update status via API ---------------------------------------------
+  const statusMutation = useMutation({
+    mutationFn: ({ id, status }: { id: string; status: string }) =>
+      api.patch(`/api/requests/${id}/status`, { status }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["requests"] });
+      toast({ title: "Status atualizado!" });
+    },
+    onError: (e: Error) => {
+      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    },
+  });
+
+  const updateStatus = useCallback(
+    (id: string, status: string) => statusMutation.mutate({ id, status }),
+    [statusMutation],
+  );
 
   return {
     requests,
@@ -91,6 +179,11 @@ export function useRequests() {
     statusFilter,
     setStatusFilter,
     createRequest,
-    emptyForm: EMPTY_FORM,
+    updateStatus,
+    isLoading,
+    emptyForm: { listingId: "", message: "" } as NewRequestForm,
   };
 }
+
+// Need React import for useState
+import React from "react";

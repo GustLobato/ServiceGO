@@ -38,7 +38,7 @@ listingsRouter.get(
 // GET /listings/:id — público
 listingsRouter.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const listing = await listingsService.getListingById(req.params.id);
+    const listing = await listingsService.getListingById(req.params.id as string);
     res.json(listing);
   } catch (err) {
     next(err);
@@ -69,7 +69,7 @@ listingsRouter.patch(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const input = updateListingSchema.parse(req.body);
-      const listing = await listingsService.updateListing(req.params.id, req.user!.sub, input);
+      const listing = await listingsService.updateListing(req.params.id as string, req.user!.sub, input);
       res.json(listing);
     } catch (err) {
       next(err);
@@ -84,7 +84,7 @@ listingsRouter.delete(
   requireRole('provider'),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await listingsService.deleteListing(req.params.id, req.user!.sub);
+      await listingsService.deleteListing(req.params.id as string, req.user!.sub);
       res.status(204).send();
     } catch (err) {
       next(err);

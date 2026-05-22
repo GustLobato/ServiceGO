@@ -19,7 +19,7 @@ reviewsRouter.post('/', authMiddleware, requireRole('client'), async (req: Reque
 // GET /reviews/listing/:listingId — avaliações públicas de um listing
 reviewsRouter.get('/listing/:listingId', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const reviews = await reviewsService.getListingReviews(req.params.listingId);
+    const reviews = await reviewsService.getListingReviews(req.params.listingId as string);
     res.json(reviews);
   } catch (err) {
     next(err);

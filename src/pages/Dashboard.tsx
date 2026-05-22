@@ -37,6 +37,8 @@ const Dashboard = () => {
     statusFilter,
     setStatusFilter,
     createRequest,
+    updateStatus,
+    isLoading,
   } = useRequests();
 
   const handleLogout = () => {
@@ -92,53 +94,64 @@ const Dashboard = () => {
           onMenuOpen={() => setSidebarOpen(true)}
         />
 
-        <div className="p-6 max-w-6xl mx-auto w-full">
-          <motion.div
-            key={activeView}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2 }}
-          >
-            {activeView === "dashboard" && (
-              <DashboardHome
-                userName={userName}
-                stats={stats}
-                recentRequests={filteredRequests}
-                onNavigate={handleNav}
-                onCreateRequest={createRequest}
-              />
-            )}
+        <div className="p-6 max-w-6xl mx-auto w-full flex-1">
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-muted-foreground gap-2">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <span>Carregando dados...</span>
+            </div>
+          ) : (
+            <motion.div
+              key={activeView}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              {activeView === "dashboard" && (
+                <DashboardHome
+                  userName={userName}
+                  stats={stats}
+                  recentRequests={filteredRequests}
+                  onNavigate={handleNav}
+                  onCreateRequest={createRequest}
+                  userRole={user?.role}
+                  onUpdateStatus={updateStatus}
+                />
+              )}
 
-            {activeView === "buscar" && (
-              <SearchView
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                onNavigate={handleNav}
-              />
-            )}
+              {activeView === "buscar" && (
+                <SearchView
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  onNavigate={handleNav}
+                />
+              )}
 
-            {activeView === "solicitacoes" && (
-              <RequestsView
-                filteredRequests={filteredRequests}
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                statusFilter={statusFilter}
-                onStatusFilterChange={setStatusFilter}
-              />
-            )}
+              {activeView === "solicitacoes" && (
+                <RequestsView
+                  filteredRequests={filteredRequests}
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  statusFilter={statusFilter}
+                  onStatusFilterChange={setStatusFilter}
+                  userRole={user?.role}
+                  onUpdateStatus={updateStatus}
+                />
+              )}
 
-            {activeView === "avaliacoes" && (
-              <ReviewsView completedRequests={completedRequests} />
-            )}
+              {activeView === "avaliacoes" && (
+                <ReviewsView completedRequests={completedRequests} />
+              )}
 
-            {activeView === "perfil" && user && (
-              <ProfileView
-                user={user}
-                userName={userName}
-                userInitials={userInitials}
-              />
-            )}
-          </motion.div>
+              {activeView === "perfil" && user && (
+                <ProfileView
+                  user={user}
+                  userName={userName}
+                  userInitials={userInitials}
+                />
+              )}
+            </motion.div>
+          )}
         </div>
       </main>
     </div>
