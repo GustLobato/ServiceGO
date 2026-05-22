@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("client") // "client" | "provider"
+  phone     String?
+  bio       String?
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relações
+  listings  Listing[]
+  requests  Request[]  @relation("ClientRequests")
+  reviews   Review[]   @relation("ClientReviews")
+}
+
+model Listing {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  category    String
+  price       Float
+  priceType   String   @default("fixed") // "fixed" | "hourly" | "negotiable"
+  location    String?
+  imageUrl    String?
+  rating      Float    @default(0)
+  reviewCount Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  providerId String
+  provider   User      @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  requests Request[]
+  reviews  Review[]
+}
+
+model Request {
+  id          String   @id @default(cuid())
+  status      String   @default("pending") // "pending" | "accepted" | "in_progress" | "completed" | "cancelled"
+  message     String?
+  scheduledAt DateTime?
+  price       Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  clientId  String
+  client    User    @relation("ClientRequests", fields: [clientId], references: [id], onDelete: Cascade)
+
+  listingId  String
+  listing    Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  review Review?
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int      // 1–5
+  comment   String?
+  createdAt DateTime @default(now())
+
+  clientId  String
+  client    User    @relation("ClientReviews", fields: [clientId], references: [id], onDelete: Cascade)
+
+  listingId  String
+  listing    Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  requestId  String  @unique
+  request    Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
+}
