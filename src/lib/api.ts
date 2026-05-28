@@ -6,9 +6,10 @@ const BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 // ---- Token helpers --------------------------------------------------------
 const TOKEN_KEY = "servicego_token";
 
-export const getToken = (): string | null => localStorage.getItem(TOKEN_KEY);
-export const setToken = (t: string) => localStorage.setItem(TOKEN_KEY, t);
-export const removeToken = () => localStorage.removeItem(TOKEN_KEY);
+// sessionStorage is cleared when the tab closes, reducing persistent XSS exposure
+export const getToken = (): string | null => sessionStorage.getItem(TOKEN_KEY);
+export const setToken = (t: string) => sessionStorage.setItem(TOKEN_KEY, t);
+export const removeToken = () => sessionStorage.removeItem(TOKEN_KEY);
 
 // ---- Role / Status mapping  PT ↔ EN --------------------------------------
 const ROLE_TO_PT: Record<string, string> = { client: "cliente", provider: "prestador" };

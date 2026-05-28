@@ -1,12 +1,5 @@
-/**
- * Funções de validação reutilizáveis
- * Centralizadas aqui para garantir consistência entre Login e Cadastro
- */
-
-/** Regex de e-mail RFC 5322 simplificado — mais robusto que \S+@\S+\.\S+ */
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
 
-/** Comprimento mínimo de senha — DEVE ser o mesmo em login e cadastro */
 export const MIN_PASSWORD_LENGTH = 8;
 export const MIN_NAME_LENGTH = 3;
 
@@ -24,11 +17,17 @@ export function validateEmail(email: string): string | undefined {
 
 export function validatePassword(
   password: string,
-  label = "Senha"
+  label = "Senha",
+  strict = false
 ): string | undefined {
   if (!password) return `${label} é obrigatória`;
   if (password.length < MIN_PASSWORD_LENGTH)
     return `Mínimo ${MIN_PASSWORD_LENGTH} caracteres`;
+  if (strict) {
+    if (!/[A-Z]/.test(password)) return `${label} deve conter ao menos uma letra maiúscula`;
+    if (!/[0-9]/.test(password)) return `${label} deve conter ao menos um número`;
+    if (!/[^A-Za-z0-9]/.test(password)) return `${label} deve conter ao menos um caractere especial`;
+  }
   return undefined;
 }
 
@@ -57,11 +56,10 @@ export function validateSignupForm(
   return {
     name: validateName(name),
     email: validateEmail(email),
-    password: validatePassword(password),
+    password: validatePassword(password, "Senha", true),
   };
 }
 
-/** Retorna true se o objeto não tiver nenhum erro definido */
 export function hasNoErrors(errors: ValidationErrors): boolean {
   return Object.values(errors).every((v) => v === undefined);
 }

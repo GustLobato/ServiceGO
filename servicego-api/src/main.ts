@@ -18,24 +18,35 @@ const allowedOrigins = env.CORS_ORIGIN.split(',').map((o) => o.trim());
 app.use(
   cors({
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      // Allow requests with no origin (health checks, curl, server-to-server)
       if (!origin) return callback(null, true);
       if (allowedOrigins.includes(origin)) return callback(null, true);
-      // Also allow any *.vercel.app subdomain
       if (/\.vercel\.app$/.test(origin)) return callback(null, true);
       callback(new Error(`CORS: origin ${origin} not allowed`));
     },
     credentials: true,
   }),
 );
+
+// General rate limit
 app.use(
   rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 min
+    windowMs: 15 * 60 * 1000,
     max: 200,
     standardHeaders: true,
     legacyHeaders: false,
+    message: { error: 'Muitas requisições. Tente novamente em alguns minutos.' },
   }),
 );
+
+// Strict rate limit for authentication endpoints (brute-force protection)
+const authRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Muitas tentativas de autenticação. Aguarde 15 minutos.' },
+  skipSuccessfulRequests: true,
+});
 
 // ─── Body parsing ─────────────────────────────────────────────────────────────
 app.use(express.json());
@@ -46,7 +57,7 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
-app.use('/api/auth', authRouter);
+app.use('/api/auth', authRateLimit, authRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/listings', listingsRouter);
 app.use('/api/requests', requestsRouter);
