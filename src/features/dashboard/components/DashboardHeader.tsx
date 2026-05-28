@@ -11,7 +11,7 @@ interface DashboardHeaderProps {
 }
 
 const DashboardHeader = ({ userInitials, userName, searchQuery, onSearchChange, onMenuOpen }: DashboardHeaderProps) => (
-  <header className="h-[68px] border-b border-gray-100 bg-white flex items-center justify-between px-6 shrink-0">
+  <header className="h-[68px] border-b border-gray-100 bg-white flex items-center justify-between px-4 sm:px-6 shrink-0">
     <div className="flex items-center gap-4">
       <button
         className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"

@@ -119,6 +119,16 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
     { id: "avaliacoes", label: "Avaliações" },
   ];
 
+  const heroStats = isProvider ? [
+    { icon: Star, value: "4.9", label: "Avaliação" },
+    { icon: CheckCircle2, value: "128", label: "Serviços" },
+    { icon: TrendingUp, value: "98%", label: "Satisfação" },
+  ] : [
+    { icon: Star, value: "—", label: "Avaliação" },
+    { icon: Shield, value: "Sim", label: "Verificado" },
+    { icon: Calendar, value: joinDate, label: "Membro desde" },
+  ];
+
   const soon = () => toast({ title: "Em breve", description: "Funcionalidade disponível em breve." });
 
   // ── Hero card ───────────────────────────────────────────────
@@ -135,9 +145,9 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
       </div>
 
       {/* Body */}
-      <div className="px-6 pb-6">
+      <div className="px-4 pb-5 sm:px-6 sm:pb-6">
         {/* Avatar row */}
-        <div className="flex items-end justify-between -mt-12 mb-5">
+        <div className="flex flex-col gap-4 -mt-12 mb-5 sm:flex-row sm:items-end sm:justify-between">
           <div className="relative">
             <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary to-orange-600 border-4 border-white shadow-xl flex items-center justify-center">
               <span className="font-display font-bold text-white text-2xl tracking-tight">{userInitials}</span>
@@ -151,7 +161,7 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
 
           {/* Action buttons */}
           {!editing ? (
-            <div className="flex items-center gap-2">
+            <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
               {isProvider && (
                 <button onClick={soon} className="w-9 h-9 rounded-xl border border-gray-200 hover:border-gray-300 hover:bg-gray-50 flex items-center justify-center transition-colors">
                   <Heart className="h-4 w-4 text-gray-500" />
@@ -160,12 +170,12 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
               <button onClick={soon} className="w-9 h-9 rounded-xl border border-gray-200 hover:border-gray-300 hover:bg-gray-50 flex items-center justify-center transition-colors">
                 <Share2 className="h-4 w-4 text-gray-500" />
               </button>
-              <Button size="sm" variant="outline" className="gap-1.5 rounded-xl border-gray-200 hover:border-primary hover:text-primary" onClick={() => setEditing(true)}>
+              <Button size="sm" variant="outline" className="flex-1 gap-1.5 rounded-xl border-gray-200 hover:border-primary hover:text-primary sm:flex-none" onClick={() => setEditing(true)}>
                 <Pencil className="h-3.5 w-3.5" /> Editar perfil
               </Button>
             </div>
           ) : (
-            <div className="flex gap-2">
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
               <Button variant="outline" size="sm" className="gap-1.5 rounded-xl" onClick={() => { setEditing(false); setForm({ name: user.name, phone: user.phone ?? "", bio: user.bio ?? "" }); }}>
                 <X className="h-3.5 w-3.5" /> Cancelar
               </Button>
@@ -178,7 +188,7 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
         </div>
 
         {/* Name + badges */}
-        <h2 className="font-display text-2xl font-bold text-gray-900 leading-tight">{userName}</h2>
+        <h2 className="font-display text-2xl font-bold text-gray-900 leading-tight break-words">{userName}</h2>
         <div className="flex items-center gap-2 mt-2 flex-wrap">
           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${roleInfo.bg} ${roleInfo.color}`}>
             {user.role === "prestador" ? <Briefcase className="h-3 w-3" /> : <User className="h-3 w-3" />}
@@ -194,7 +204,7 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
         {/* Meta info */}
         <div className="flex flex-wrap items-center gap-4 mt-3">
           <span className="flex items-center gap-1.5 text-sm text-gray-500">
-            <Mail className="h-3.5 w-3.5 text-gray-400" /> {user.email}
+            <Mail className="h-3.5 w-3.5 flex-shrink-0 text-gray-400" /> <span className="break-all">{user.email}</span>
           </span>
           {isProvider && (
             <span className="flex items-center gap-1.5 text-sm text-gray-500">
@@ -214,26 +224,7 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
 
         {/* Stats divider */}
         <div className="grid grid-cols-3 gap-4 mt-5 pt-5 border-t border-gray-100">
-          {isProvider ? [
-            { icon: Star,     value: "4.9",    label: "Avaliação" },
-            { icon: CheckCircle2, value: "128",label: "Serviços" },
-            { icon: TrendingUp,  value: "98%", label: "Satisfação" },
-          ] : [
-            { icon: Star,     value: "—",     label: "Avaliação" },
-            { icon: Shield,   value: "Sim",   label: "Verificado" },
-            { icon: Calendar, value: joinDate, label: "Membro desde" },
-          ].map((s) => (
-            <div key={s.label} className="text-center">
-              <s.icon className="h-4 w-4 text-primary mx-auto mb-1" />
-              <p className="font-display font-bold text-gray-900 text-sm leading-tight">{s.value}</p>
-              <p className="text-xs text-gray-400 mt-0.5">{s.label}</p>
-            </div>
-          ))}
-          {isProvider && [
-            { icon: Star,     value: "4.9",    label: "Avaliação" },
-            { icon: CheckCircle2, value: "128",label: "Serviços" },
-            { icon: TrendingUp,  value: "98%", label: "Satisfação" },
-          ].map((s) => (
+          {heroStats.map((s) => (
             <div key={s.label} className="text-center">
               <s.icon className="h-4 w-4 text-primary mx-auto mb-1" />
               <p className="font-display font-bold text-gray-900 text-sm leading-tight">{s.value}</p>
@@ -290,7 +281,7 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
             className={`rounded-xl border-gray-200 resize-none text-sm ${editing ? "focus:border-primary" : "bg-gray-50 text-gray-600"}`} />
         </div>
         {editing && (
-          <div className="flex justify-end gap-2 pt-1">
+          <div className="flex flex-col gap-2 pt-1 sm:flex-row sm:justify-end">
             <Button variant="outline" className="rounded-xl text-sm" onClick={() => { setEditing(false); setForm({ name: user.name, phone: user.phone ?? "", bio: user.bio ?? "" }); }}>Cancelar</Button>
             <Button className="rounded-xl text-sm gap-2" disabled={mutation.isPending} onClick={() => mutation.mutate(form)}>
               <Save className="h-4 w-4" />{mutation.isPending ? "Salvando..." : "Salvar alterações"}
@@ -311,12 +302,12 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
         { title: "Senha",                     sub: "Altere sua senha regularmente para manter a conta segura" },
         { title: "Verificação em dois fatores", sub: "Adicione uma camada extra de proteção" },
       ].map((item, i) => (
-        <div key={item.title} className={`flex items-center justify-between py-3 ${i < 1 ? "border-b border-gray-50" : ""}`}>
+        <div key={item.title} className={`flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between ${i < 1 ? "border-b border-gray-50" : ""}`}>
           <div>
             <p className="text-sm font-medium text-gray-900">{item.title}</p>
             <p className="text-xs text-gray-500 mt-0.5">{item.sub}</p>
           </div>
-          <Button variant="outline" size="sm" className="rounded-xl text-xs shrink-0" disabled>Em breve</Button>
+          <Button variant="outline" size="sm" className="w-full rounded-xl text-xs shrink-0 sm:w-auto" disabled>Em breve</Button>
         </div>
       ))}
     </div>
@@ -348,7 +339,7 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
       {/* Stats */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
         <h4 className="font-display font-semibold text-gray-900 text-sm mb-4">Estatísticas</h4>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
           {[
             { label: "Avaliações",  value: "47",  sub: "recebidas",    bg: "bg-amber-50",  color: "text-amber-700" },
             { label: "Nota média",  value: "4.9", sub: "de 5.0",       bg: "bg-green-50",  color: "text-green-700" },
@@ -394,7 +385,7 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
       </div>
 
       {/* Highlights grid */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {MOCK_HIGHLIGHTS.map((h) => (
           <div key={h.label} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-start gap-3">
             <div className={`w-9 h-9 rounded-xl ${h.bg} flex items-center justify-center flex-shrink-0`}>
@@ -411,7 +402,7 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
       {/* Mobile sidebar stats */}
       <div className="lg:hidden bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
         <h4 className="font-display font-semibold text-gray-900 text-sm mb-3">Estatísticas</h4>
-        <div className="grid grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {[
             { label: "Avaliações", value: "47",  color: "text-amber-600" },
             { label: "Nota",       value: "4.9", color: "text-green-700" },
@@ -484,7 +475,7 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
   // Portfólio
   const PortfolioTab = (
     <div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {MOCK_PORTFOLIO.map((item) => (
           <div
             key={item.title}
@@ -514,7 +505,7 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
   const AvaliacoesTab = (
     <div className="space-y-4">
       {/* Aggregate */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-6">
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col gap-6 sm:flex-row sm:items-center">
         <div className="text-center">
           <p className="font-display font-bold text-5xl text-gray-900 leading-none">4.9</p>
           <StarRow rating={5} size="md" />
@@ -568,16 +559,16 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
 
       {isProvider ? (
         /* Provider: tabs + sidebar */
-        <div className="mt-6 flex gap-6 items-start">
+        <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-start">
           {/* Main */}
           <div className="flex-1 min-w-0">
             {/* Tab bar */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-1.5 flex gap-1 mb-5">
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-1.5 grid grid-cols-2 gap-1 mb-5 sm:grid-cols-4">
               {TABS.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 py-2 px-3 rounded-xl text-sm font-medium transition-all duration-150 ${
+                  className={`py-2 px-3 rounded-xl text-sm font-medium transition-all duration-150 ${
                     activeTab === tab.id
                       ? "bg-primary text-white shadow-sm"
                       : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"

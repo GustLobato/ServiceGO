@@ -21,7 +21,7 @@ const ITEMS: { icon: typeof Home; label: string; view: SidebarView }[] = [
 
 const Sidebar = ({ activeView, onNavigate, open, onClose, onLogout }: SidebarProps) => (
   <aside
-    className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-100 transform transition-transform duration-200 lg:translate-x-0 flex flex-col ${
+    className={`fixed lg:static inset-y-0 left-0 z-40 w-[min(16rem,85vw)] lg:w-64 bg-white border-r border-gray-100 transform transition-transform duration-200 lg:translate-x-0 flex flex-col ${
       open ? "translate-x-0 shadow-2xl" : "-translate-x-full"
     }`}
   >

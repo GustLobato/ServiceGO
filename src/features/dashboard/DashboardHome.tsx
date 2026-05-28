@@ -158,13 +158,13 @@ const ClientDashboard = ({
   return (
     <>
       {/* ── Greeting header ── */}
-      <div className="flex items-start justify-between mb-7">
+      <div className="flex flex-col gap-4 mb-7 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="w-4 h-0.5 bg-primary rounded" />
             <span className="text-primary text-sm font-semibold">Painel do cliente</span>
           </div>
-          <h1 className="font-display text-3xl font-bold text-gray-900">
+          <h1 className="font-display text-2xl font-bold text-gray-900 sm:text-3xl">
             Olá, {firstName}!
           </h1>
           <p className="text-gray-500 mt-1 text-sm">
@@ -241,7 +241,7 @@ const ClientDashboard = ({
       </div>
 
       {/* ── 4 Metric cards ── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-7">
+      <div className="grid grid-cols-1 min-[360px]:grid-cols-2 lg:grid-cols-4 gap-4 mb-7">
         {METRICS.map((m, i) => {
           const MIcon = m.icon;
           return (
@@ -253,7 +253,7 @@ const ClientDashboard = ({
             >
               <button
                 onClick={m.onClick}
-                className="w-full bg-white border border-gray-100 rounded-2xl p-5 text-left hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group shadow-sm"
+                className="w-full bg-white border border-gray-100 rounded-2xl p-4 text-left hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 group shadow-sm sm:p-5"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${m.iconBg}`}>
@@ -261,7 +261,7 @@ const ClientDashboard = ({
                   </div>
                   <ChevronRight className="h-4 w-4 text-gray-300 group-hover:text-gray-400 group-hover:translate-x-0.5 transition-all" />
                 </div>
-                <p className="font-display text-3xl font-bold text-gray-900 leading-none tabular-nums">
+                <p className="font-display text-2xl font-bold text-gray-900 leading-none tabular-nums sm:text-3xl">
                   {m.value}
                 </p>
                 <p className="text-sm font-semibold text-gray-700 mt-1.5">{m.label}</p>
@@ -339,7 +339,7 @@ const ClientDashboard = ({
                   const cfg = ACTIVITY_STATUS[req.status] ?? ACTIVITY_STATUS.pendente;
                   const AIcon = cfg.icon;
                   return (
-                    <div key={req.id} className="flex items-start gap-4 px-6 py-4 hover:bg-gray-50/50 transition-colors">
+                    <div key={req.id} className="flex flex-col gap-3 px-5 py-4 hover:bg-gray-50/50 transition-colors sm:flex-row sm:items-start sm:px-6">
                       <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${cfg.bg}`}>
                         <AIcon className={`h-4 w-4 ${cfg.color}`} />
                       </div>
@@ -350,7 +350,7 @@ const ClientDashboard = ({
                           {req.provider && <span className="text-gray-400"> · {req.provider}</span>}
                         </p>
                       </div>
-                      <div className="flex-shrink-0 flex flex-col items-end gap-1.5">
+                      <div className="flex flex-wrap items-center gap-1.5 sm:flex-shrink-0 sm:flex-col sm:items-end">
                         <StatusBadge status={req.status} className="text-[11px]" />
                         <span className="text-[11px] text-gray-400">{req.date}</span>
                       </div>
@@ -490,9 +490,9 @@ const ProviderDashboard = ({
   return (
     <>
       {/* Welcome header */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex flex-col gap-4 mb-8 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="font-display text-3xl font-bold text-gray-900">
+          <h1 className="font-display text-2xl font-bold text-gray-900 sm:text-3xl">
             Olá, {firstName}! 👋
           </h1>
           <p className="text-gray-500 mt-1.5">
@@ -510,7 +510,7 @@ const ProviderDashboard = ({
 
       {/* Complete profile banner */}
       {hasIncompleteProfile && (
-        <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50 border border-orange-100 rounded-2xl p-5 mb-8 flex items-center gap-4">
+        <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50 border border-orange-100 rounded-2xl p-5 mb-8 flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
             <Star className="h-6 w-6 text-white" />
           </div>
@@ -522,7 +522,7 @@ const ProviderDashboard = ({
           </div>
           <Button
             size="sm"
-            className="rounded-xl bg-primary hover:bg-primary/90 shrink-0"
+            className="w-full rounded-xl bg-primary hover:bg-primary/90 shrink-0 sm:w-auto"
             onClick={() => onNavigate("perfil")}
           >
             Completar
@@ -542,7 +542,7 @@ const ProviderDashboard = ({
             <TrendingUp className="h-6 w-6 text-white" />
           </div>
           <div className="flex-1">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <p className="font-semibold text-gray-900">Novos leads</p>
               {newLeads.length > 0 && (
                 <span className="px-2 py-0.5 bg-primary text-white text-xs font-bold rounded-full">

@@ -73,7 +73,7 @@ function PasswordStrength({ password }: { password: string }) {
       </div>
 
       {/* Criteria grid */}
-      <div className="grid grid-cols-2 gap-x-4 gap-y-1.5">
+      <div className="grid grid-cols-1 gap-x-4 gap-y-1.5 sm:grid-cols-2">
         {CRITERIA.map((c) => {
           const met = c.test(password);
           return (
@@ -205,7 +205,7 @@ const Cadastro = () => {
       <AuthPanel title="Junte-se ao ServiceGO" subtitle={panelSubtitle} />
 
       {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-gray-50 relative overflow-hidden overflow-y-auto">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 bg-gray-50 relative overflow-hidden overflow-y-auto">
         {/* Subtle blobs */}
         <div className="absolute top-0 right-0 w-72 h-72 bg-orange-100/50 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-56 h-56 bg-orange-50 rounded-full blur-3xl pointer-events-none" />
@@ -214,7 +214,7 @@ const Cadastro = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
-          className="w-full max-w-lg relative z-10 py-8"
+          className="w-full max-w-lg relative z-10 py-6 sm:py-8"
         >
           {/* Logo */}
           <div className="flex justify-center mb-6">
@@ -222,7 +222,7 @@ const Cadastro = () => {
           </div>
 
           {/* Card */}
-          <div className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/60 p-8">
+          <div className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/60 p-5 sm:p-8">
 
             {/* Header */}
             <div className="mb-7">
@@ -379,7 +379,7 @@ const Cadastro = () => {
                 <Label className="text-sm font-medium text-gray-700">
                   Tipo de conta
                 </Label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   {ROLE_OPTIONS.map((opt) => {
                     const active = role === opt.value;
                     const RoleIcon = opt.icon;

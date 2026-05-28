@@ -49,8 +49,8 @@ const StarRow = ({ count, white }: { count: number; white?: boolean }) => (
 );
 
 const Testimonials = () => (
-  <section id="avaliacoes" className="py-24 bg-white">
-    <div className="max-w-7xl mx-auto px-6">
+  <section id="avaliacoes" className="py-16 sm:py-24 bg-white">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
       {/* Header */}
       <motion.div
@@ -124,7 +124,7 @@ const Testimonials = () => (
             <div className={`border-t ${t.featured ? "border-white/20" : "border-gray-100"}`} />
 
             {/* Author */}
-            <div className="flex items-center gap-3 pt-5">
+            <div className="flex flex-wrap items-center gap-3 pt-5">
               <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${t.avatarGradient} flex items-center justify-center text-white font-bold text-sm flex-shrink-0 ${
                 t.featured ? "ring-2 ring-white/30" : "ring-2 ring-gray-100"
               }`}>

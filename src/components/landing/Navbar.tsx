@@ -33,7 +33,7 @@ const Navbar = () => {
       {/* Main floating navbar */}
       <nav
         className={cn(
-          "max-w-6xl mx-auto flex items-center justify-between h-[60px] px-5 sm:px-6 rounded-2xl border transition-all duration-300",
+          "max-w-6xl mx-auto flex items-center justify-between h-[60px] px-4 sm:px-6 rounded-2xl border transition-all duration-300",
           scrolled
             ? "bg-white/95 backdrop-blur-md border-gray-200/70 shadow-lg shadow-gray-200/60"
             : "bg-white/88 backdrop-blur-sm border-white/70 shadow-md shadow-gray-100/50"

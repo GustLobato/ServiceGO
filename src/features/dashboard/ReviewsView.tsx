@@ -185,7 +185,7 @@ function SubmittedReviewCard({ review, index }: { review: SubmittedReview; index
       {/* Top gradient accent line */}
       <div className={`h-1 w-full bg-gradient-to-r ${review.clientGradient}`} />
 
-      <div className="p-6">
+      <div className="p-5 sm:p-6">
         {/* Header: avatar + name + rating */}
         <div className="flex items-start gap-4">
           <div
@@ -198,7 +198,7 @@ function SubmittedReviewCard({ review, index }: { review: SubmittedReview; index
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-semibold text-gray-900 text-sm">{review.clientName}</span>
               <BadgeCheck className="h-4 w-4 text-primary flex-shrink-0" />
-              <div className="ml-auto flex-shrink-0">
+              <div className="w-full flex-shrink-0 sm:ml-auto sm:w-auto">
                 <StarRow rating={review.rating} />
               </div>
             </div>
@@ -207,18 +207,18 @@ function SubmittedReviewCard({ review, index }: { review: SubmittedReview; index
         </div>
 
         {/* Comment */}
-        <p className="text-sm text-gray-600 leading-relaxed mt-4 mb-4 pl-16">
+        <p className="text-sm text-gray-600 leading-relaxed mt-4 mb-4 sm:pl-16">
           "{review.comment}"
         </p>
 
         {/* Footer: category + service + provider + badge */}
-        <div className="flex items-center gap-3 flex-wrap pt-4 border-t border-gray-50">
+        <div className="flex flex-col items-start gap-2 pt-4 border-t border-gray-50 sm:flex-row sm:items-center sm:gap-3 sm:flex-wrap">
           <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full ${catCfg.bg} flex-shrink-0`}>
             <CatIcon className={`h-3.5 w-3.5 ${catCfg.color}`} />
             <span className={`text-xs font-semibold ${catCfg.color} capitalize`}>{review.category}</span>
           </div>
 
-          <span className="text-xs text-gray-500 flex-1 min-w-0 truncate">{review.service}</span>
+          <span className="text-xs text-gray-500 min-w-0 break-words sm:flex-1 sm:truncate">{review.service}</span>
 
           <span className="text-xs font-medium text-gray-500 flex-shrink-0">
             com <span className="text-primary font-semibold">{review.provider}</span>
@@ -343,7 +343,7 @@ const ReviewsView = ({ completedRequests }: ReviewsViewProps) => {
       </motion.div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 min-[360px]:grid-cols-2 lg:grid-cols-4 gap-4">
         {STATS.map((s, i) => (
           <motion.div
             key={s.label}
@@ -466,7 +466,7 @@ const ReviewsView = ({ completedRequests }: ReviewsViewProps) => {
                   }`}
                 >
                   {/* Card header */}
-                  <div className="flex items-center gap-4 px-6 py-5">
+                  <div className="flex flex-col gap-4 px-5 py-5 sm:flex-row sm:items-center sm:px-6">
                     <div className={`w-14 h-14 rounded-2xl ${catCfg.bg} flex items-center justify-center flex-shrink-0`}>
                       <CatIcon className={`h-6 w-6 ${catCfg.color}`} />
                     </div>
@@ -482,7 +482,7 @@ const ReviewsView = ({ completedRequests }: ReviewsViewProps) => {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3 flex-shrink-0">
+                    <div className="flex w-full items-center gap-3 sm:w-auto sm:flex-shrink-0">
                       <span className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 text-green-700 text-xs font-semibold">
                         <CheckCircle2 className="h-3.5 w-3.5" />
                         Concluído
@@ -490,7 +490,7 @@ const ReviewsView = ({ completedRequests }: ReviewsViewProps) => {
                       {!isReviewing ? (
                         <Button
                           size="sm"
-                          className="gap-1.5 rounded-xl bg-primary hover:bg-primary/90 shadow-sm shadow-orange-200"
+                          className="w-full gap-1.5 rounded-xl bg-primary hover:bg-primary/90 shadow-sm shadow-orange-200 sm:w-auto"
                           onClick={() => handleStartReview(r.id)}
                         >
                           <Star className="h-3.5 w-3.5" />
@@ -500,7 +500,7 @@ const ReviewsView = ({ completedRequests }: ReviewsViewProps) => {
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="rounded-xl text-gray-400 hover:text-gray-600"
+                          className="ml-auto rounded-xl text-gray-400 hover:text-gray-600 sm:ml-0"
                           onClick={() => setReviewingId(null)}
                         >
                           <X className="h-4 w-4" />
@@ -511,7 +511,7 @@ const ReviewsView = ({ completedRequests }: ReviewsViewProps) => {
 
                   {/* Inline review form */}
                   {isReviewing && (
-                    <div className="px-6 pb-6 border-t border-gray-50">
+                    <div className="px-5 pb-5 border-t border-gray-50 sm:px-6 sm:pb-6">
                       <div className="pt-5 space-y-5">
                         <div>
                           <p className="text-sm font-semibold text-gray-700 mb-3">
@@ -534,18 +534,18 @@ const ReviewsView = ({ completedRequests }: ReviewsViewProps) => {
                           />
                         </div>
 
-                        <div className="flex gap-3 justify-end">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
                           <Button
                             variant="outline"
                             size="sm"
-                            className="rounded-xl"
+                            className="w-full rounded-xl sm:w-auto"
                             onClick={() => setReviewingId(null)}
                           >
                             Cancelar
                           </Button>
                           <Button
                             size="sm"
-                            className="gap-1.5 rounded-xl bg-primary hover:bg-primary/90"
+                            className="w-full gap-1.5 rounded-xl bg-primary hover:bg-primary/90 sm:w-auto"
                             disabled={mutation.isPending || rating === 0}
                             onClick={() =>
                               mutation.mutate({
@@ -587,7 +587,7 @@ const ReviewsView = ({ completedRequests }: ReviewsViewProps) => {
 
         {displayedReviews.length === 0 ? (
           /* Filtered empty state */
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-16 text-center">
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center sm:p-16">
             <div className="w-20 h-20 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-5">
               <Star className="h-9 w-9 text-amber-400" />
             </div>

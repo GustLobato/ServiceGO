@@ -18,14 +18,14 @@ const AVATARS = [
 ];
 
 const CTA = () => (
-  <section className="py-20 bg-white">
-    <div className="max-w-7xl mx-auto px-6">
+  <section className="py-16 sm:py-20 bg-white">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6">
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.55 }}
-        className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-primary via-orange-500 to-amber-400 px-8 py-16 md:px-16 md:py-20 text-center"
+        className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-primary via-orange-500 to-amber-400 px-5 py-12 sm:px-8 sm:py-16 md:px-16 md:py-20 text-center"
       >
         {/* Decorative light radials */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_15%_50%,rgba(255,255,255,0.18),transparent_55%)] pointer-events-none" />
@@ -52,18 +52,20 @@ const CTA = () => (
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.15, duration: 0.4 }}
-            className="flex items-center justify-center gap-0 mb-6"
+            className="flex flex-col items-center justify-center gap-3 mb-6 sm:flex-row sm:gap-0"
           >
-            {AVATARS.map((a, i) => (
-              <div
-                key={a.initials}
-                className={`w-9 h-9 rounded-full bg-gradient-to-br ${a.bg} border-2 border-white/80 flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0`}
-                style={{ marginLeft: i > 0 ? "-10px" : 0, zIndex: AVATARS.length - i }}
-              >
-                {a.initials}
-              </div>
-            ))}
-            <div className="ml-3 flex items-center gap-1.5">
+            <div className="flex items-center justify-center">
+              {AVATARS.map((a, i) => (
+                <div
+                  key={a.initials}
+                  className={`w-9 h-9 rounded-full bg-gradient-to-br ${a.bg} border-2 border-white/80 flex items-center justify-center text-white text-[11px] font-bold flex-shrink-0`}
+                  style={{ marginLeft: i > 0 ? "-10px" : 0, zIndex: AVATARS.length - i }}
+                >
+                  {a.initials}
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-1.5 sm:ml-3">
               <div className="flex items-center gap-0.5">
                 {[1, 2, 3, 4, 5].map((s) => (
                   <Star key={s} className="h-3.5 w-3.5 fill-white text-white" />
@@ -96,7 +98,7 @@ const CTA = () => (
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="text-base px-8 h-12 gap-2 bg-white text-primary font-bold hover:bg-white/90 shadow-xl shadow-orange-900/20 hover:-translate-y-0.5 transition-all rounded-2xl"
+              className="w-full text-base px-8 h-12 gap-2 bg-white text-primary font-bold hover:bg-white/90 shadow-xl shadow-orange-900/20 hover:-translate-y-0.5 transition-all rounded-2xl sm:w-auto"
               asChild
             >
               <Link to="/cadastro">
@@ -106,7 +108,7 @@ const CTA = () => (
             </Button>
             <Button
               size="lg"
-              className="text-base px-8 h-12 bg-transparent hover:bg-white/15 text-white font-semibold border border-white/30 hover:border-white/50 hover:-translate-y-0.5 transition-all rounded-2xl"
+              className="w-full text-base px-8 h-12 bg-transparent hover:bg-white/15 text-white font-semibold border border-white/30 hover:border-white/50 hover:-translate-y-0.5 transition-all rounded-2xl sm:w-auto"
               asChild
             >
               <Link to="/login">Já tenho conta</Link>

@@ -211,9 +211,9 @@ const RequestDetailsView = ({
               </div>
             </div>
 
-            <div className="rounded-2xl border border-orange-100 bg-white/85 p-4 shadow-sm backdrop-blur">
+            <div className="w-full rounded-2xl border border-orange-100 bg-white/85 p-4 shadow-sm backdrop-blur lg:w-80">
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">Resumo</p>
-              <p className="mt-2 font-display text-2xl font-bold text-gray-950">{request.service}</p>
+              <p className="mt-2 font-display text-2xl font-bold text-gray-950 break-words">{request.service}</p>
               <p className="mt-1 text-sm font-medium text-primary">{request.category || "Serviço"}</p>
             </div>
           </div>
@@ -465,7 +465,7 @@ const InfoCard = ({ icon: Icon, title, value, description, tone }: InfoCardProps
       <Icon className="h-5 w-5" />
     </div>
     <p className="text-xs font-semibold uppercase tracking-wide text-gray-400">{title}</p>
-    <p className="mt-2 text-base font-bold leading-snug text-gray-950">{value}</p>
+    <p className="mt-2 text-base font-bold leading-snug text-gray-950 break-words">{value}</p>
     <p className="mt-1 text-sm leading-relaxed text-gray-500">{description}</p>
   </div>
 );
@@ -473,7 +473,7 @@ const InfoCard = ({ icon: Icon, title, value, description, tone }: InfoCardProps
 const ValueRow = ({ label, value, strong = false }: { label: string; value: string; strong?: boolean }) => (
   <div className="flex items-center justify-between gap-4">
     <span className={cn("text-sm", strong ? "font-bold text-gray-950" : "font-medium text-gray-500")}>{label}</span>
-    <span className={cn("text-sm", strong ? "font-display text-xl font-bold text-gray-950" : "font-semibold text-gray-700")}>
+    <span className={cn("min-w-0 text-right text-sm break-words", strong ? "font-display text-xl font-bold text-gray-950" : "font-semibold text-gray-700")}>
       {value}
     </span>
   </div>

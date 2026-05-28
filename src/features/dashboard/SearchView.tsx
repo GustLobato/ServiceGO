@@ -298,7 +298,7 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
     <div>
       {/* ── Page header ── */}
       <div className="mb-6">
-        <h1 className="font-display text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+        <h1 className="font-display text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
           Profissionais encontrados
           <span className="text-primary"> perto de você</span>
         </h1>
@@ -310,7 +310,7 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
       {/* ── Premium search bar ── */}
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm flex flex-col sm:flex-row mb-6 overflow-hidden">
         {/* Service search */}
-        <div className="flex items-center gap-3 flex-1 px-5 py-4 border-b sm:border-b-0 sm:border-r border-gray-100">
+        <div className="flex items-center gap-3 flex-1 px-4 py-4 sm:px-5 border-b sm:border-b-0 sm:border-r border-gray-100">
           <Search className="h-5 w-5 text-gray-400 flex-shrink-0" />
           <input
             type="text"
@@ -327,7 +327,7 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
         </div>
 
         {/* Location */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b sm:border-b-0 sm:border-r border-gray-100">
+        <div className="flex items-center gap-3 px-4 py-4 sm:px-5 border-b sm:border-b-0 sm:border-r border-gray-100">
           <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0" />
           <input
             type="text"
@@ -407,7 +407,7 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
           <div className="lg:hidden mb-4">
             <button
               onClick={() => setFiltersOpen(!filtersOpen)}
-              className="flex items-center gap-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl px-4 py-2.5 hover:bg-gray-50 transition-colors"
+              className="flex w-full items-center gap-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl px-4 py-2.5 hover:bg-gray-50 transition-colors"
             >
               <SlidersHorizontal className="h-4 w-4" />
               Filtros
@@ -446,16 +446,16 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
 
           {/* Results bar */}
           {!isLoading && displayListings.length > 0 && (
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-5">
               <p className="text-sm text-gray-500">
                 <span className="font-semibold text-gray-900">{displayListings.length}</span> profissional{displayListings.length !== 1 ? "is" : ""} encontrado{displayListings.length !== 1 ? "s" : ""}
               </p>
-              <div className="flex items-center gap-2">
+              <div className="flex w-full items-center gap-2 sm:w-auto">
                 <label className="text-xs text-gray-500 font-medium">Ordenar por:</label>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-                  className="text-xs text-gray-700 font-medium bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 outline-none focus:border-primary cursor-pointer"
+                  className="w-full text-xs text-gray-700 font-medium bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 outline-none focus:border-primary cursor-pointer sm:w-auto"
                 >
                   <option value="relevance">Relevância</option>
                   <option value="rating">Mais avaliados</option>
@@ -570,7 +570,7 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
                     </div>
 
                     {/* Card footer */}
-                    <div className="px-5 py-4 border-t border-gray-50 flex items-center justify-between gap-3 mt-auto">
+                    <div className="px-5 py-4 border-t border-gray-50 flex flex-col gap-3 mt-auto sm:flex-row sm:items-center sm:justify-between">
                       <div>
                         <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wide">A partir de</p>
                         <p className="font-display font-bold text-primary text-lg leading-none mt-0.5">
@@ -578,18 +578,18 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-2">
+                      <div className="flex w-full items-center gap-2 sm:w-auto">
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-9 px-3 text-xs rounded-xl border-gray-200 text-gray-600 hover:bg-gray-50 shadow-none"
+                          className="h-9 flex-1 px-3 text-xs rounded-xl border-gray-200 text-gray-600 hover:bg-gray-50 shadow-none sm:flex-none"
                           onClick={() => toast({ title: "Em breve", description: "Perfil completo disponível em breve." })}
                         >
                           Ver perfil
                         </Button>
                         <Button
                           size="sm"
-                          className="h-9 px-4 text-xs gap-1.5 rounded-xl shadow-sm shadow-orange-200"
+                          className="h-9 flex-1 px-4 text-xs gap-1.5 rounded-xl shadow-sm shadow-orange-200 sm:flex-none"
                           onClick={() => requestMutation.mutate(listing.id)}
                           disabled={isPending}
                         >

@@ -110,7 +110,7 @@ const Dashboard = () => {
           onMenuOpen={() => setSidebarOpen(true)}
         />
 
-        <div className="p-6 max-w-6xl mx-auto w-full flex-1">
+        <div className="w-full max-w-6xl flex-1 mx-auto px-4 py-5 sm:p-6">
           {isLoading ? (
             <PageLoader text="Carregando dados..." />
           ) : (

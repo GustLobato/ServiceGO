@@ -63,13 +63,13 @@ const STATS = [
 ];
 
 const Hero = () => (
-  <section className="relative min-h-[90vh] flex items-center pt-28 pb-16 overflow-hidden bg-white">
+  <section className="relative min-h-[90vh] flex items-center pt-24 pb-12 sm:pt-28 sm:pb-16 overflow-hidden bg-white">
     {/* Background ambient blobs */}
     <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-orange-100/40 rounded-full blur-[150px] -translate-y-1/3 translate-x-1/3 pointer-events-none" />
     <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-50/70 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
     <div className="absolute top-1/2 left-[45%] w-[350px] h-[350px] bg-amber-50/50 rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
-    <div className="max-w-7xl mx-auto px-6 w-full">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full">
       <div className="grid lg:grid-cols-2 gap-12 xl:gap-20 items-center">
 
         {/* ── Left: copy + CTAs ── */}
@@ -93,7 +93,7 @@ const Hero = () => (
           </motion.span>
 
           {/* Headline */}
-          <h1 className="font-display text-5xl md:text-6xl lg:text-[64px] xl:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight">
+          <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-[64px] xl:text-7xl font-bold text-gray-900 leading-[1.05] tracking-tight">
             Encontre o<br />
             profissional{" "}
             <span className="text-primary relative inline-block">
@@ -118,7 +118,7 @@ const Hero = () => (
           </h1>
 
           {/* Subtitle */}
-          <p className="mt-6 text-lg text-gray-500 leading-relaxed max-w-lg">
+          <p className="mt-6 text-base sm:text-lg text-gray-500 leading-relaxed max-w-lg">
             Conectamos você aos melhores profissionais da sua região com rapidez, segurança e transparência total.
           </p>
 
@@ -126,7 +126,7 @@ const Hero = () => (
           <div className="mt-9 flex flex-col sm:flex-row gap-3">
             <Button
               size="lg"
-              className="gap-2 px-8 h-14 text-base rounded-2xl shadow-lg shadow-orange-200 hover:shadow-xl hover:shadow-orange-200 hover:-translate-y-0.5 transition-all"
+              className="w-full sm:w-auto gap-2 px-8 h-14 text-base rounded-2xl shadow-lg shadow-orange-200 hover:shadow-xl hover:shadow-orange-200 hover:-translate-y-0.5 transition-all"
               asChild
             >
               <Link to="/cadastro">
@@ -137,7 +137,7 @@ const Hero = () => (
             <Button
               size="lg"
               variant="outline"
-              className="gap-2 h-14 px-6 rounded-2xl text-gray-600 border-gray-200 hover:bg-gray-50 font-medium"
+              className="w-full sm:w-auto gap-2 h-14 px-6 rounded-2xl text-gray-600 border-gray-200 hover:bg-gray-50 font-medium"
             >
               <MapPin className="h-4 w-4 text-primary" />
               Usar minha localização
@@ -145,11 +145,11 @@ const Hero = () => (
           </div>
 
           {/* Stats */}
-          <div className="mt-11 flex flex-wrap items-center gap-y-4">
+          <div className="mt-11 grid grid-cols-1 gap-3 min-[360px]:grid-cols-3 sm:flex sm:flex-wrap sm:items-center sm:gap-y-4">
             {STATS.map((s, i) => (
               <div
                 key={s.label}
-                className={`${i > 0 ? "border-l border-gray-200 pl-8" : ""} ${i < STATS.length - 1 ? "pr-8" : ""}`}
+                className={`rounded-2xl bg-white/80 p-3 shadow-sm ring-1 ring-gray-100 min-[360px]:text-center sm:rounded-none sm:bg-transparent sm:p-0 sm:text-left sm:shadow-none sm:ring-0 ${i > 0 ? "sm:border-l sm:border-gray-200 sm:pl-8" : ""} ${i < STATS.length - 1 ? "sm:pr-8" : ""}`}
               >
                 <div className="font-display text-2xl font-bold text-gray-900">{s.value}</div>
                 <div className="text-xs text-gray-500 mt-0.5 font-medium">{s.label}</div>

@@ -102,7 +102,7 @@ const RequestList = ({
       />
     ) : (
       <>
-        <div className="hidden grid-cols-[minmax(0,2.1fr)_minmax(110px,0.8fr)_minmax(0,1.4fr)_minmax(120px,0.9fr)_auto] gap-4 border-b border-gray-100 bg-gray-50/80 px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-gray-400 md:grid">
+        <div className="hidden grid-cols-[minmax(0,2.1fr)_minmax(110px,0.8fr)_minmax(0,1.4fr)_minmax(120px,0.9fr)_auto] gap-4 border-b border-gray-100 bg-gray-50/80 px-6 py-3 text-[11px] font-bold uppercase tracking-widest text-gray-400 lg:grid">
           <span>Serviço</span>
           <span>Data</span>
           <span>Profissional</span>
@@ -119,11 +119,11 @@ const RequestList = ({
             return (
               <div
                 key={req.id}
-                className="group relative grid gap-4 px-5 py-5 transition-colors hover:bg-orange-50/30 md:grid-cols-[minmax(0,2.1fr)_minmax(110px,0.8fr)_minmax(0,1.4fr)_minmax(120px,0.9fr)_auto] md:items-center md:px-6"
+                className="group relative grid gap-4 px-5 py-5 transition-colors hover:bg-orange-50/30 lg:grid-cols-[minmax(0,2.1fr)_minmax(110px,0.8fr)_minmax(0,1.4fr)_minmax(120px,0.9fr)_auto] lg:items-center lg:px-6"
               >
                 <span
                   className={cn(
-                    "absolute bottom-5 left-0 top-5 w-1 rounded-r-full opacity-80 md:bottom-4 md:top-4",
+                    "absolute bottom-5 left-0 top-5 w-1 rounded-r-full opacity-80 lg:bottom-4 lg:top-4",
                     STATUS_ACCENT[req.status as RequestStatus] ?? "bg-primary",
                   )}
                 />
@@ -153,7 +153,7 @@ const RequestList = ({
                     <CalendarDays className="h-4 w-4" />
                   </span>
                   <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400 md:hidden">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-400 lg:hidden">
                       Data
                     </p>
                     <p className="font-medium text-gray-600">{req.date}</p>
@@ -182,12 +182,12 @@ const RequestList = ({
                   <StatusBadge status={req.status as RequestStatus} />
                 </div>
 
-                <div className="flex flex-wrap items-center gap-1.5 md:justify-end">
+                <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center lg:justify-end">
                   {onRequestSelect && (
                     <Button
                       size="sm"
                       variant="outline"
-                      className="h-8 border-orange-100 px-3 text-xs text-primary shadow-none hover:bg-orange-50"
+                      className="h-9 w-full border-orange-100 px-3 text-xs text-primary shadow-none hover:bg-orange-50 sm:w-auto lg:h-8"
                       onClick={() => onRequestSelect(req)}
                     >
                       <Eye className="h-3.5 w-3.5" /> Detalhes
@@ -200,7 +200,7 @@ const RequestList = ({
                         <>
                           <Button
                             size="sm"
-                            className="h-8 px-3 text-xs"
+                            className="h-9 w-full px-3 text-xs sm:w-auto lg:h-8"
                             onClick={() => onUpdateStatus(req.id, "accepted")}
                           >
                             <Check className="h-3.5 w-3.5" /> Aceitar
@@ -208,7 +208,7 @@ const RequestList = ({
                           <Button
                             size="sm"
                             variant="outline"
-                            className="h-8 border-red-200 px-3 text-xs text-red-500 shadow-none hover:bg-red-50"
+                            className="h-9 w-full border-red-200 px-3 text-xs text-red-500 shadow-none hover:bg-red-50 sm:w-auto lg:h-8"
                             onClick={() => onUpdateStatus(req.id, "cancelled")}
                           >
                             <Ban className="h-3.5 w-3.5" /> Recusar
@@ -219,7 +219,7 @@ const RequestList = ({
                         <Button
                           size="sm"
                           variant="outline"
-                          className="h-8 border-red-200 px-3 text-xs text-red-500 shadow-none hover:bg-red-50"
+                          className="h-9 w-full border-red-200 px-3 text-xs text-red-500 shadow-none hover:bg-red-50 sm:w-auto lg:h-8"
                           onClick={() => onUpdateStatus(req.id, "cancelled")}
                         >
                           <Ban className="h-3.5 w-3.5" /> Cancelar
@@ -228,7 +228,7 @@ const RequestList = ({
                       {req.status === "aceita" && userRole === "prestador" && (
                         <Button
                           size="sm"
-                          className="h-8 px-3 text-xs"
+                          className="h-9 w-full px-3 text-xs sm:w-auto lg:h-8"
                           onClick={() => onUpdateStatus(req.id, "in_progress")}
                         >
                           <Play className="h-3.5 w-3.5" /> Iniciar
@@ -237,7 +237,7 @@ const RequestList = ({
                       {req.status === "em_andamento" && userRole === "prestador" && (
                         <Button
                           size="sm"
-                          className="h-8 px-3 text-xs"
+                          className="h-9 w-full px-3 text-xs sm:w-auto lg:h-8"
                           onClick={() => onUpdateStatus(req.id, "completed")}
                         >
                           <Check className="h-3.5 w-3.5" /> Concluir

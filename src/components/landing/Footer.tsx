@@ -9,7 +9,7 @@ const Footer = () => {
 
   return (
     <footer className="bg-white border-t border-gray-100">
-      <div className="max-w-7xl mx-auto px-6 py-14">
+      <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 sm:py-14">
         <div className="grid md:grid-cols-4 gap-10 mb-12">
           <div>
             <Link to="/"><LogoFull iconSize={28} textSize="text-lg" /></Link>

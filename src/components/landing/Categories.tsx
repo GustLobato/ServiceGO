@@ -102,8 +102,8 @@ const Categories = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="servicos" className="py-24 bg-gray-50/50">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="servicos" className="py-16 sm:py-24 bg-gray-50/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
         {/* Section header */}
         <motion.div
@@ -128,7 +128,7 @@ const Categories = () => {
         </motion.div>
 
         {/* Category grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 min-[380px]:grid-cols-2 lg:grid-cols-4 gap-4">
           {CATEGORIES.map((cat, i) => (
             <motion.button
               key={cat.name}

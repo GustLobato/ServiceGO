@@ -65,7 +65,7 @@ const Login = () => {
       />
 
       {/* Right form panel */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-gray-50 relative overflow-hidden">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6 bg-gray-50 relative overflow-hidden">
         {/* Subtle blobs */}
         <div className="absolute top-0 right-0 w-72 h-72 bg-orange-100/50 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-56 h-56 bg-orange-50 rounded-full blur-3xl pointer-events-none" />
@@ -74,15 +74,15 @@ const Login = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
-          className="w-full max-w-md relative z-10"
+          className="w-full max-w-md relative z-10 py-6 sm:py-0"
         >
           {/* Logo — visible on mobile (panel hidden) and desktop above card */}
-          <div className="flex justify-center mb-7">
+          <div className="flex justify-center mb-6 sm:mb-7">
             <LogoFull iconSize={30} textSize="text-xl" />
           </div>
 
           {/* Login card */}
-          <div className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/60 p-8">
+          <div className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/60 p-5 sm:p-8">
 
             {/* Card header */}
             <div className="mb-7">
@@ -159,7 +159,7 @@ const Login = () => {
               </div>
 
               {/* Remember + Forgot */}
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-2.5">
                   <Checkbox
                     id="remember"
