@@ -1,4 +1,5 @@
 import { FileText, CheckCircle2, Clock, Users, TrendingUp } from "lucide-react";
+import { DashboardCard } from "@/components/ui/dashboard-card";
 
 interface Stats {
   total: number;
@@ -11,29 +12,35 @@ const CLIENT_STATS = [
   {
     key: "active" as const,
     label: "Solicitações ativas",
-    desc: "Em aberto ou em andamento",
+    description: "Em aberto ou em andamento",
     icon: FileText,
-    bg: "bg-orange-100",
-    color: "text-primary",
-    trend: "+2 esta semana",
+    iconBg: "bg-orange-100",
+    iconColor: "text-primary",
+    badge: "+2 esta semana",
+    badgeBg: "bg-orange-50",
+    badgeColor: "text-primary",
   },
   {
     key: "completed" as const,
     label: "Serviços concluídos",
-    desc: "Finalizados com sucesso",
+    description: "Finalizados com sucesso",
     icon: CheckCircle2,
-    bg: "bg-green-100",
-    color: "text-green-600",
-    trend: "Atualizado hoje",
+    iconBg: "bg-green-100",
+    iconColor: "text-green-600",
+    badge: "Atualizado hoje",
+    badgeBg: "bg-green-50",
+    badgeColor: "text-green-700",
   },
   {
     key: "pending" as const,
     label: "Orçamentos recebidos",
-    desc: "Aguardando resposta",
+    description: "Aguardando resposta",
     icon: Clock,
-    bg: "bg-purple-100",
-    color: "text-purple-600",
-    trend: "Revisar agora",
+    iconBg: "bg-purple-100",
+    iconColor: "text-purple-600",
+    badge: "Revisar agora",
+    badgeBg: "bg-purple-50",
+    badgeColor: "text-purple-700",
   },
 ];
 
@@ -41,60 +48,65 @@ const PROVIDER_STATS = [
   {
     key: "pending" as const,
     label: "Novos leads",
-    desc: "Solicitações aguardando aceite",
+    description: "Solicitações aguardando aceite",
     icon: Users,
-    bg: "bg-orange-100",
-    color: "text-primary",
-    trend: "Responda rápido",
+    iconBg: "bg-orange-100",
+    iconColor: "text-primary",
+    badge: "Responda rápido",
+    badgeBg: "bg-orange-50",
+    badgeColor: "text-primary",
   },
   {
     key: "active" as const,
     label: "Em andamento",
-    desc: "Serviços em execução",
+    description: "Serviços em execução",
     icon: TrendingUp,
-    bg: "bg-blue-100",
-    color: "text-blue-600",
-    trend: "Atualizado hoje",
+    iconBg: "bg-blue-100",
+    iconColor: "text-blue-600",
+    badge: "Atualizado hoje",
+    badgeBg: "bg-blue-50",
+    badgeColor: "text-blue-700",
   },
   {
     key: "completed" as const,
     label: "Concluídos",
-    desc: "Serviços finalizados",
+    description: "Serviços finalizados",
     icon: CheckCircle2,
-    bg: "bg-green-100",
-    color: "text-green-600",
-    trend: "Histórico completo",
+    iconBg: "bg-green-100",
+    iconColor: "text-green-600",
+    badge: "Histórico completo",
+    badgeBg: "bg-green-50",
+    badgeColor: "text-green-700",
   },
 ];
 
 const StatsGrid = ({
   stats,
   userRole,
+  onNavigate,
 }: {
   stats: Stats;
   userRole?: "cliente" | "prestador" | "admin";
+  onNavigate?: (view: string) => void;
 }) => {
   const items = userRole === "prestador" ? PROVIDER_STATS : CLIENT_STATS;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-      {items.map(({ key, label, desc, icon: Icon, bg, color, trend }) => (
-        <div
+      {items.map(({ key, label, description, icon, iconBg, iconColor, badge, badgeBg, badgeColor }) => (
+        <DashboardCard
           key={key}
-          className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-md transition-all duration-200 cursor-pointer group"
-        >
-          <div className="flex items-start justify-between mb-4">
-            <div className={`w-12 h-12 rounded-xl ${bg} flex items-center justify-center`}>
-              <Icon className={`h-6 w-6 ${color}`} />
-            </div>
-            <span className={`text-xs font-medium px-2 py-1 rounded-full ${bg} ${color}`}>
-              {trend}
-            </span>
-          </div>
-          <div className="font-display text-4xl font-bold text-gray-900 mb-1">{stats[key]}</div>
-          <div className="font-semibold text-gray-700 text-sm">{label}</div>
-          <div className="text-xs text-gray-400 mt-1">{desc}</div>
-        </div>
+          icon={icon}
+          iconBg={iconBg}
+          iconColor={iconColor}
+          value={stats[key]}
+          label={label}
+          description={description}
+          badge={badge}
+          badgeBg={badgeBg}
+          badgeColor={badgeColor}
+          onClick={onNavigate ? () => onNavigate(key === "active" ? "solicitacoes" : key === "completed" ? "avaliacoes" : "solicitacoes") : undefined}
+        />
       ))}
     </div>
   );

@@ -19,6 +19,7 @@ import SearchView from "@/features/dashboard/SearchView";
 import RequestsView from "@/features/dashboard/RequestsView";
 import ReviewsView from "@/features/dashboard/ReviewsView";
 import ProfileView from "@/features/dashboard/ProfileView";
+import { PageLoader } from "@/components/ui/page-loader";
 import type { SidebarView } from "@/features/dashboard/types";
 
 const Dashboard = () => {
@@ -97,10 +98,7 @@ const Dashboard = () => {
 
         <div className="p-6 max-w-6xl mx-auto w-full flex-1">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center h-full min-h-[400px] text-muted-foreground gap-2">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              <span>Carregando dados...</span>
-            </div>
+            <PageLoader text="Carregando dados..." />
           ) : (
             <motion.div
               key={activeView}

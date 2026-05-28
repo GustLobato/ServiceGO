@@ -4,6 +4,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Design tokens ─────────────────────────────────────────── */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -53,32 +54,23 @@
   .dark {
     --background: 20 10% 6%;
     --foreground: 30 10% 95%;
-
     --card: 20 10% 10%;
     --card-foreground: 30 10% 95%;
-
     --popover: 20 10% 10%;
     --popover-foreground: 30 10% 95%;
-
     --primary: 25 95% 55%;
     --primary-foreground: 0 0% 100%;
-
     --secondary: 20 10% 15%;
     --secondary-foreground: 30 10% 95%;
-
     --muted: 20 10% 15%;
     --muted-foreground: 30 5% 55%;
-
     --accent: 0 0% 95%;
     --accent-foreground: 0 0% 8%;
-
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
-
     --border: 20 10% 15%;
     --input: 20 10% 15%;
     --ring: 25 95% 55%;
-
     --sidebar-background: 20 10% 8%;
     --sidebar-foreground: 30 10% 90%;
     --sidebar-primary: 25 95% 55%;
@@ -90,6 +82,7 @@
   }
 }
 
+/* ── Base reset & typography ───────────────────────────────── */
 @layer base {
   * {
     @apply border-border;
@@ -97,14 +90,18 @@
 
   html {
     scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-background text-foreground font-body;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.01em;
   }
 
   /* Custom scrollbar */
@@ -125,4 +122,126 @@
   ::selection {
     @apply bg-primary/20 text-foreground;
   }
+}
+
+/* ── ServiceGO Design System utilities ────────────────────── */
+@layer components {
+
+  /* Surface — white card base */
+  .sg-surface {
+    @apply bg-white rounded-2xl border border-gray-100 shadow-sm;
+  }
+
+  /* Surface with hover */
+  .sg-surface-hover {
+    @apply sg-surface hover:shadow-md hover:-translate-y-0.5 transition-all duration-200;
+  }
+
+  /* Page layout container */
+  .sg-page {
+    @apply p-6 max-w-6xl mx-auto w-full flex-1;
+  }
+
+  /* Background with orange blob accent */
+  .sg-page-bg {
+    @apply relative;
+  }
+  .sg-page-bg::before {
+    content: '';
+    @apply absolute top-0 right-0 w-96 h-96 bg-orange-100/40 rounded-full blur-3xl pointer-events-none -z-10;
+    transform: translate(25%, -25%);
+  }
+  .sg-page-bg::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-64 h-64 bg-orange-50/60 rounded-full blur-2xl pointer-events-none -z-10;
+    transform: translate(-25%, 25%);
+  }
+
+  /* Dashboard metric value */
+  .sg-metric {
+    @apply font-display text-4xl font-bold text-gray-900 leading-none;
+  }
+
+  /* Section heading */
+  .sg-heading {
+    @apply font-display text-3xl font-bold text-gray-900;
+  }
+
+  /* Orange accent line */
+  .sg-accent-line {
+    @apply inline-flex items-center gap-1.5 text-primary text-sm font-semibold;
+  }
+  .sg-accent-line::before {
+    content: '';
+    @apply w-4 h-0.5 bg-primary rounded block;
+  }
+
+  /* Orange primary button glow effect */
+  .sg-btn-primary {
+    @apply bg-primary text-white font-semibold rounded-xl shadow-sm shadow-orange-200;
+    @apply hover:bg-orange-600 hover:shadow-md hover:shadow-orange-200;
+    @apply transition-all duration-150;
+  }
+
+  /* Pill badge */
+  .sg-pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium;
+  }
+
+  /* Sidebar nav item active */
+  .sg-nav-active {
+    @apply bg-orange-50 text-primary;
+  }
+
+  /* Sidebar nav item default */
+  .sg-nav-item {
+    @apply text-gray-600 hover:bg-gray-50 hover:text-gray-900;
+  }
+
+  /* Input focus enhancement */
+  .sg-input {
+    @apply h-11 rounded-xl border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary/10;
+    @apply transition-colors duration-150;
+  }
+
+  /* Card section divider */
+  .sg-divider {
+    @apply border-t border-gray-100;
+  }
+
+  /* Gradient blob — reusable background accent */
+  .sg-blob {
+    @apply absolute rounded-full blur-3xl pointer-events-none opacity-60;
+  }
+  .sg-blob-orange {
+    @apply bg-orange-100/70;
+  }
+  .sg-blob-amber {
+    @apply bg-amber-50/80;
+  }
+}
+
+/* ── Animation utilities ───────────────────────────────────── */
+@layer utilities {
+  .animate-fade-up {
+    animation: fadeUp 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Stagger delay helpers */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
 }
