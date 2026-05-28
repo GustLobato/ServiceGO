@@ -4,96 +4,24 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Seeding database (idempotent)...');
+  console.log('🌱 Seeding database...');
 
-  const hashedPassword = await bcrypt.hash('senha123', 12);
+  const adminPassword = await bcrypt.hash('ServiceGO@2026', 12);
 
-  // Upsert users (keyed on unique email)
-  const client = await prisma.user.upsert({
-    where: { email: 'joao@example.com' },
+  const admin = await prisma.user.upsert({
+    where: { email: 'admin@servicego.com.br' },
     update: {},
     create: {
-      name: 'João Silva',
-      email: 'joao@example.com',
-      password: hashedPassword,
-      role: 'client',
-      phone: '(11) 99999-1111',
+      name: 'Gustavo Gabriel',
+      email: 'admin@servicego.com.br',
+      password: adminPassword,
+      role: 'admin',
     },
-  });
-
-  const provider = await prisma.user.upsert({
-    where: { email: 'maria@example.com' },
-    update: {},
-    create: {
-      name: 'Maria Santos',
-      email: 'maria@example.com',
-      password: hashedPassword,
-      role: 'provider',
-      phone: '(11) 99999-2222',
-      bio: 'Especialista em limpeza residencial com 5 anos de experiência.',
-    },
-  });
-
-  // Upsert listing — use a deterministic ID so we can upsert
-  const LISTING_ID = 'seed-listing-001';
-  const listing = await prisma.listing.upsert({
-    where: { id: LISTING_ID },
-    update: {},
-    create: {
-      id: LISTING_ID,
-      title: 'Limpeza Residencial Completa',
-      description:
-        'Serviço completo de limpeza para sua casa. Inclui todos os cômodos, organização e produto de limpeza incluso.',
-      category: 'Limpeza',
-      price: 150,
-      priceType: 'fixed',
-      location: 'São Paulo, SP',
-      providerId: provider.id,
-    },
-  });
-
-  // Upsert request
-  const REQUEST_ID = 'seed-request-001';
-  const request = await prisma.request.upsert({
-    where: { id: REQUEST_ID },
-    update: {},
-    create: {
-      id: REQUEST_ID,
-      clientId: client.id,
-      listingId: listing.id,
-      message: 'Preciso de limpeza para sábado de manhã.',
-      status: 'completed',
-      price: 150,
-    },
-  });
-
-  // Upsert review (requestId is @unique, so we can use it)
-  const REVIEW_ID = 'seed-review-001';
-  const review = await prisma.review.upsert({
-    where: { id: REVIEW_ID },
-    update: {},
-    create: {
-      id: REVIEW_ID,
-      clientId: client.id,
-      listingId: listing.id,
-      requestId: request.id,
-      rating: 5,
-      comment: 'Serviço excelente! Muito caprichoso.',
-    },
-  });
-
-  // Update listing rating
-  await prisma.listing.update({
-    where: { id: listing.id },
-    data: { rating: 5, reviewCount: 1 },
   });
 
   console.log('✅ Seed concluído!');
-  console.log(`   👤 Client: ${client.email} / senha123`);
-  console.log(`   👤 Provider: ${provider.email} / senha123`);
-  console.log(`   📦 Listing: ${listing.title}`);
-  console.log(`   📋 Request: ${request.id}`);
-  console.log(`   ⭐ Review: ${review.id}`);
+  console.log(`   👤 Admin: ${admin.email} (role: ${admin.role})`);
+  console.log('   ⚠️  Altere a senha do admin após o primeiro acesso.');
 }
 
 main()

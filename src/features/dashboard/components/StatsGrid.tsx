@@ -1,8 +1,4 @@
-/**
- * StatsGrid — grade de cards de estatísticas do Dashboard.
- */
-import { Card, CardContent } from "@/components/ui/card";
-import { FileText, ArrowUpRight, Clock, CheckCircle2 } from "lucide-react";
+import { FileText, CheckCircle2, Clock, ChevronRight } from "lucide-react";
 
 interface Stats {
   total: number;
@@ -11,31 +7,52 @@ interface Stats {
   completed: number;
 }
 
-interface StatsGridProps {
-  stats: Stats;
-}
-
 const STAT_ITEMS = [
-  { key: "total" as const, label: "Total", icon: FileText, color: "text-foreground" },
-  { key: "active" as const, label: "Ativas", icon: ArrowUpRight, color: "text-primary" },
-  { key: "pending" as const, label: "Pendentes", icon: Clock, color: "text-primary" },
-  { key: "completed" as const, label: "Concluídas", icon: CheckCircle2, color: "text-primary" },
+  {
+    key: "active" as const,
+    label: "Solicitações ativas",
+    desc: "Veja e acompanhe suas solicitações",
+    icon: FileText,
+    bg: "bg-orange-100",
+    color: "text-primary",
+  },
+  {
+    key: "completed" as const,
+    label: "Serviços concluídos",
+    desc: "Serviços finalizados com sucesso",
+    icon: CheckCircle2,
+    bg: "bg-green-100",
+    color: "text-green-600",
+  },
+  {
+    key: "pending" as const,
+    label: "Orçamentos recebidos",
+    desc: "Orçamentos em aberto para avaliar",
+    icon: Clock,
+    bg: "bg-purple-100",
+    color: "text-purple-600",
+  },
 ];
 
-const StatsGrid = ({ stats }: StatsGridProps) => (
-  <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-    {STAT_ITEMS.map(({ key, label, icon: Icon, color }) => (
-      <Card key={label}>
-        <CardContent className="p-5">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-muted-foreground">{label}</span>
-            <Icon className={`h-4 w-4 ${color}`} />
+const StatsGrid = ({ stats }: { stats: Stats }) => (
+  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    {STAT_ITEMS.map(({ key, label, desc, icon: Icon, bg, color }) => (
+      <div
+        key={key}
+        className="bg-white border border-gray-100 rounded-2xl p-6 hover:shadow-md transition-shadow cursor-pointer group"
+      >
+        <div className="flex items-start justify-between">
+          <div className={`w-14 h-14 rounded-2xl ${bg} flex items-center justify-center`}>
+            <Icon className={`h-6 w-6 ${color}`} />
           </div>
-          <div className="font-display text-3xl font-bold text-foreground">
-            {stats[key]}
-          </div>
-        </CardContent>
-      </Card>
+          <ChevronRight className="h-5 w-5 text-gray-300 group-hover:text-gray-400 transition-colors mt-1" />
+        </div>
+        <div className="mt-4">
+          <div className="font-display text-4xl font-bold text-gray-900">{stats[key]}</div>
+          <div className="font-semibold text-gray-700 mt-1">{label}</div>
+          <div className="text-xs text-gray-400 mt-1 leading-snug">{desc}</div>
+        </div>
+      </div>
     ))}
   </div>
 );

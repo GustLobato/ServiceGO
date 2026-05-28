@@ -1,28 +1,14 @@
-/**
- * DashboardHome — view principal do Dashboard.
- * Exibe estatísticas e as últimas solicitações.
- */
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter,
+  DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import StatsGrid from "./components/StatsGrid";
@@ -50,22 +36,10 @@ interface ListingsResponse {
   pages: number;
 }
 
-const DashboardHome = ({
-  userName,
-  stats,
-  recentRequests,
-  onNavigate,
-  onCreateRequest,
-  userRole,
-  onUpdateStatus,
-}: DashboardHomeProps) => {
-  const [newRequest, setNewRequest] = useState<NewRequestForm>({
-    listingId: "",
-    message: "",
-  });
+const DashboardHome = ({ userName, stats, recentRequests, onNavigate, onCreateRequest, userRole, onUpdateStatus }: DashboardHomeProps) => {
+  const [newRequest, setNewRequest] = useState<NewRequestForm>({ listingId: "", message: "" });
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // Fetch available listings to populate the request dropdown
   const { data: listingsData } = useQuery({
     queryKey: ["listings", "all-modal"],
     queryFn: () => api.get<ListingsResponse>("/api/listings?limit=100"),
@@ -80,69 +54,68 @@ const DashboardHome = ({
     }
   };
 
+  const firstName = userName.split(" ")[0];
+
   return (
     <>
-      <div className="flex items-center justify-between mb-8">
+      {/* Welcome header */}
+      <div className="flex items-start justify-between mb-8">
         <div>
-          <h1 className="font-display text-2xl font-bold text-foreground">
-            Dashboard
+          <h1 className="font-display text-3xl font-bold text-gray-900">
+            Olá, {firstName}! 👋
           </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            Bem-vindo de volta, {userName}!
+          <p className="text-gray-500 mt-1.5">
+            Bem-vindo ao seu painel. Acompanhe suas solicitações e encontre os melhores profissionais.
           </p>
         </div>
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" /> Nova Solicitação
+            <Button className="gap-2 bg-primary hover:bg-primary/90 shadow-sm shadow-orange-200 rounded-xl">
+              <Plus className="h-4 w-4" /> Nova solicitação
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="rounded-2xl">
             <DialogHeader>
               <DialogTitle>Nova Solicitação de Serviço</DialogTitle>
               <DialogDescription>
-                Preencha os dados para criar uma nova solicitação a um profissional.
+                Selecione o serviço e descreva o que você precisa.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <Label htmlFor="req-listing">Serviço Disponível *</Label>
-                <Select
-                  value={newRequest.listingId}
-                  onValueChange={(v) =>
-                    setNewRequest((p) => ({ ...p, listingId: v }))
-                  }
-                >
-                  <SelectTrigger id="req-listing">
-                    <SelectValue placeholder="Selecione um serviço anunciado" />
+                <Label>Serviço Disponível *</Label>
+                <Select value={newRequest.listingId} onValueChange={(v) => setNewRequest((p) => ({ ...p, listingId: v }))}>
+                  <SelectTrigger className="rounded-xl">
+                    <SelectValue placeholder="Selecione um serviço" />
                   </SelectTrigger>
                   <SelectContent>
                     {listings.map((l) => (
                       <SelectItem key={l.id} value={l.id}>
-                        {l.title} (R$ {l.price.toFixed(2)} - por {l.provider.name})
+                        {l.title} — R$ {l.price.toFixed(2)} · {l.provider.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="req-message">Mensagem / Instruções</Label>
+                <Label>Mensagem / Instruções</Label>
                 <Textarea
-                  id="req-message"
-                  placeholder="Descreva o que precisa ou deixe uma mensagem para o profissional..."
+                  placeholder="Descreva o que você precisa ou deixe uma mensagem..."
+                  className="rounded-xl resize-none"
+                  rows={3}
                   value={newRequest.message}
-                  onChange={(e) =>
-                    setNewRequest((p) => ({ ...p, message: e.target.value }))
-                  }
+                  onChange={(e) => setNewRequest((p) => ({ ...p, message: e.target.value }))}
                 />
               </div>
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancelar</Button>
+                <Button variant="outline" className="rounded-xl">Cancelar</Button>
               </DialogClose>
-              <Button onClick={handleCreate}>Criar Solicitação</Button>
+              <Button onClick={handleCreate} className="rounded-xl bg-primary hover:bg-primary/90">
+                Criar Solicitação
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -151,8 +124,7 @@ const DashboardHome = ({
       <StatsGrid stats={stats} />
 
       <RequestList
-        title="Solicitações Recentes"
-        description="Acompanhe suas últimas solicitações de serviço"
+        title="Solicitações recentes"
         requests={recentRequests.slice(0, 5)}
         onViewAll={() => onNavigate("solicitacoes")}
         userRole={userRole}

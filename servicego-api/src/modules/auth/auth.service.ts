@@ -57,7 +57,7 @@ export async function login(input: LoginInput) {
   const user = await prisma.user.findUnique({ where: { email: input.email } });
 
   if (!user || !(await bcrypt.compare(input.password, user.password))) {
-    throw new AppError(401, 'Credenciais inválidas');
+    throw new AppError(401, 'E-mail ou senha inválidos');
   }
 
   const token = signToken(user.id, user.role);

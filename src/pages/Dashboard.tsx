@@ -89,6 +89,7 @@ const Dashboard = () => {
       <main className="flex-1 min-w-0 flex flex-col">
         <DashboardHeader
           userInitials={userInitials}
+          userName={userName}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           onMenuOpen={() => setSidebarOpen(true)}

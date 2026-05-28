@@ -1,94 +1,46 @@
 import { Link } from "react-router-dom";
-import { Zap, Github, Instagram, Linkedin } from "lucide-react";
+import { Github, Instagram, Linkedin } from "lucide-react";
+import { LogoFull } from "@/components/Logo";
 import { useToast } from "@/hooks/use-toast";
 
 const Footer = () => {
   const { toast } = useToast();
-
-  const handleLink = (label: string) => {
-    toast({ title: label, description: "Página será disponibilizada em breve." });
-  };
-
-  const nav = [
-    {
-      title: "Plataforma",
-      links: [
-        { label: "Como funciona", action: () => handleLink("Como funciona") },
-        { label: "Categorias", action: () => handleLink("Categorias") },
-        { label: "Preços", action: () => handleLink("Preços") },
-        { label: "Para prestadores", action: () => handleLink("Para prestadores") },
-      ],
-    },
-    {
-      title: "Empresa",
-      links: [
-        { label: "Sobre nós", action: () => handleLink("Sobre nós") },
-        { label: "Blog", action: () => handleLink("Blog") },
-        { label: "Carreiras", action: () => handleLink("Carreiras") },
-        { label: "Contato", action: () => handleLink("Contato") },
-      ],
-    },
-    {
-      title: "Legal",
-      links: [
-        { label: "Termos de Uso", action: () => handleLink("Termos de Uso") },
-        { label: "Privacidade", action: () => handleLink("Privacidade") },
-        { label: "Cookies", action: () => handleLink("Cookies") },
-      ],
-    },
-  ];
+  const soon = (label: string) => toast({ title: label, description: "Disponível em breve." });
 
   return (
-    <footer className="border-t border-border bg-background">
-      <div className="container mx-auto px-6 py-16">
-        {/* Top row */}
+    <footer className="bg-white border-t border-gray-100">
+      <div className="max-w-7xl mx-auto px-6 py-14">
         <div className="grid md:grid-cols-4 gap-10 mb-12">
-          {/* Brand */}
-          <div className="md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 group w-fit mb-4">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shadow-md shadow-primary/30 group-hover:scale-105 transition-transform">
-                <Zap className="h-4 w-4 text-primary-foreground fill-primary-foreground" />
-              </div>
-              <span className="font-display font-bold text-xl text-foreground">
-                Service<span className="text-primary">GO</span>
-              </span>
-            </Link>
-            <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+          <div>
+            <Link to="/"><LogoFull iconSize={28} textSize="text-lg" /></Link>
+            <p className="text-sm text-gray-500 mt-4 leading-relaxed">
               Conectamos clientes a prestadores verificados com transparência e segurança.
             </p>
             <div className="flex gap-3 mt-5">
               {[
-                { icon: Github, label: "GitHub", href: "https://github.com/GustLobato/ServiceGO" },
-                { icon: Instagram, label: "Instagram", href: "#" },
-                { icon: Linkedin, label: "LinkedIn", href: "#" },
-              ].map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={s.label}
-                  className="w-9 h-9 rounded-lg bg-muted hover:bg-muted-foreground/10 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-                >
+                { icon: Github, href: "https://github.com/GustLobato/ServiceGO" },
+                { icon: Instagram, href: "#" },
+                { icon: Linkedin, href: "#" },
+              ].map((s, i) => (
+                <a key={i} href={s.href} target="_blank" rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors">
                   <s.icon className="h-4 w-4" />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Nav columns */}
-          {nav.map((col) => (
+          {[
+            { title: "Plataforma", links: ["Como funciona", "Categorias", "Para prestadores", "Preços"] },
+            { title: "Empresa", links: ["Sobre nós", "Blog", "Carreiras", "Contato"] },
+            { title: "Legal", links: ["Termos de Uso", "Privacidade", "Cookies"] },
+          ].map((col) => (
             <div key={col.title}>
-              <h4 className="font-semibold text-sm text-foreground mb-4">{col.title}</h4>
+              <h4 className="font-semibold text-sm text-gray-900 mb-4">{col.title}</h4>
               <ul className="space-y-3">
-                {col.links.map((link) => (
-                  <li key={link.label}>
-                    <button
-                      onClick={link.action}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors text-left"
-                    >
-                      {link.label}
-                    </button>
+                {col.links.map((l) => (
+                  <li key={l}>
+                    <button onClick={() => soon(l)} className="text-sm text-gray-500 hover:text-gray-900 transition-colors text-left">{l}</button>
                   </li>
                 ))}
               </ul>
@@ -96,12 +48,9 @@ const Footer = () => {
           ))}
         </div>
 
-        {/* Bottom row */}
-        <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+        <div className="pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-400">
           <p>© 2026 ServiceGO. Todos os direitos reservados.</p>
-          <p className="text-xs">
-            Projeto de Extensão Universitária · Desenvolvido com React + TypeScript
-          </p>
+          <p className="text-xs">Projeto de Extensão Universitária · React + TypeScript</p>
         </div>
       </div>
     </footer>

@@ -7,7 +7,7 @@ import {
 } from "react";
 import { api, getToken, setToken, removeToken, roleToPt } from "@/lib/api";
 
-export type UserRole = "cliente" | "prestador";
+export type UserRole = "cliente" | "prestador" | "admin";
 
 export interface AuthUser {
   id: string;
