@@ -1,4 +1,4 @@
-const EMAIL_REGEX = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const COMMON_PASSWORDS = [
   'senha123', '12345678', 'password', 'admin123', 'qwerty123',

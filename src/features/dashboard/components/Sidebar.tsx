@@ -14,7 +14,7 @@ interface SidebarProps {
 const ITEMS: { icon: typeof Home; label: string; view: SidebarView }[] = [
   { icon: Home,     label: "Início",              view: "dashboard" },
   { icon: Search,   label: "Buscar serviços",     view: "buscar" },
-  { icon: FileText, label: "Minhas solicitações", view: "solicitacoes" },
+  { icon: FileText, label: "Agendamentos",         view: "solicitacoes" },
   { icon: Star,     label: "Avaliações",          view: "avaliacoes" },
   { icon: User,     label: "Meu perfil",          view: "perfil" },
 ];

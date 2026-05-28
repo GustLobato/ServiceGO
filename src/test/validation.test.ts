@@ -139,7 +139,7 @@ describe("validateSignupForm", () => {
     const errors = validateSignupForm(
       "João Silva",
       "joao@email.com",
-      "senha12345"
+      "Senha12345!"
     );
     expect(errors.name).toBeUndefined();
     expect(errors.email).toBeUndefined();
