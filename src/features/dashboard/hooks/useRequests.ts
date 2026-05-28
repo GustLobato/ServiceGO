@@ -85,19 +85,6 @@ export function useRequests() {
     },
   });
 
-  // ---- Filters (client-side) ---------------------------------------------
-  const [searchQuery, setSearchQuery] = useMemo(() => {
-    let _q = "";
-    return [
-      _q,
-      (v: string) => {
-        _q = v;
-      },
-    ] as const;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // We'll manage filter state via simple React state instead
   return useRequestsInner(requests, isLoading, toast, qc);
 }
 
@@ -197,5 +184,4 @@ function useRequestsInner(
   };
 }
 
-// Need React import for useState
 import React from "react";

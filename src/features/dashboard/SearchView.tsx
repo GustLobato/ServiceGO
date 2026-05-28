@@ -148,7 +148,7 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
     },
   });
 
-  const listings = data?.listings ?? [];
+  const listings = useMemo(() => data?.listings ?? [], [data?.listings]);
 
   // ── Client-side filter + sort ────────────────────────────────
   const displayListings = useMemo(() => {

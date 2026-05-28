@@ -20,7 +20,7 @@ interface RequestsViewProps {
   onSearchChange: (q: string) => void;
   statusFilter: string;
   onStatusFilterChange: (v: string) => void;
-  userRole?: "cliente" | "prestador";
+  userRole?: "cliente" | "prestador" | "admin";
   onUpdateStatus?: (id: string, status: string) => void;
   onRequestSelect?: (request: ServiceRequest) => void;
 }

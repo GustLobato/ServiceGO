@@ -16,7 +16,6 @@ export function errorMiddleware(
   err: unknown,
   req: Request,
   res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction,
 ): void {
   // Erro de validação Zod

@@ -52,7 +52,7 @@ interface RequestListProps {
   title?: string;
   onViewAll?: () => void;
   emptyMessage?: string;
-  userRole?: "cliente" | "prestador";
+  userRole?: "cliente" | "prestador" | "admin";
   onUpdateStatus?: (id: string, status: string) => void;
   onRequestSelect?: (request: ServiceRequest) => void;
   description?: string;
