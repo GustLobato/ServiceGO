@@ -9,6 +9,7 @@ import {
   Car,
   Check,
   ChevronRight,
+  Eye,
   FileText,
   Home,
   Monitor,
@@ -53,6 +54,7 @@ interface RequestListProps {
   emptyMessage?: string;
   userRole?: "cliente" | "prestador";
   onUpdateStatus?: (id: string, status: string) => void;
+  onRequestSelect?: (request: ServiceRequest) => void;
   description?: string;
 }
 
@@ -63,6 +65,7 @@ const RequestList = ({
   emptyMessage = "Nenhuma solicitação encontrada.",
   userRole,
   onUpdateStatus,
+  onRequestSelect,
   description,
 }: RequestListProps) => (
   <div className="relative overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-[0_18px_60px_-42px_rgba(15,23,42,0.45)]">
@@ -180,6 +183,17 @@ const RequestList = ({
                 </div>
 
                 <div className="flex flex-wrap items-center gap-1.5 md:justify-end">
+                  {onRequestSelect && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 border-orange-100 px-3 text-xs text-primary shadow-none hover:bg-orange-50"
+                      onClick={() => onRequestSelect(req)}
+                    >
+                      <Eye className="h-3.5 w-3.5" /> Detalhes
+                    </Button>
+                  )}
+
                   {showActions && (
                     <>
                       {req.status === "pendente" && userRole === "prestador" && (

@@ -3,5 +3,6 @@ export type SidebarView =
   | "dashboard"
   | "buscar"
   | "solicitacoes"
+  | "solicitacaoDetalhes"
   | "avaliacoes"
   | "perfil";

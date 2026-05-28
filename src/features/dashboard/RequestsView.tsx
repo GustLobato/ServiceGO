@@ -22,6 +22,7 @@ interface RequestsViewProps {
   onStatusFilterChange: (v: string) => void;
   userRole?: "cliente" | "prestador";
   onUpdateStatus?: (id: string, status: string) => void;
+  onRequestSelect?: (request: ServiceRequest) => void;
 }
 
 const STATUS_OPTIONS = [
@@ -41,6 +42,7 @@ const RequestsView = ({
   onStatusFilterChange,
   userRole,
   onUpdateStatus,
+  onRequestSelect,
 }: RequestsViewProps) => {
   const activeCount = filteredRequests.filter(
     (req) => req.status === "aceita" || req.status === "em_andamento",
@@ -160,6 +162,7 @@ const RequestsView = ({
         requests={filteredRequests}
         userRole={userRole}
         onUpdateStatus={onUpdateStatus}
+        onRequestSelect={onRequestSelect}
         emptyMessage={
           statusFilter !== "all"
             ? "Nenhuma solicitação com esse status."

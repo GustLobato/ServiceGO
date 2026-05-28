@@ -26,7 +26,17 @@ export async function getMyRequests(userId: string, role: string) {
       orderBy: { createdAt: 'desc' },
       include: {
         listing: {
-          select: { id: true, title: true, imageUrl: true, provider: { select: { name: true } } },
+          select: {
+            id: true,
+            title: true,
+            category: true,
+            price: true,
+            location: true,
+            imageUrl: true,
+            rating: true,
+            reviewCount: true,
+            provider: { select: { name: true, phone: true, avatarUrl: true } },
+          },
         },
       },
     });
@@ -37,7 +47,18 @@ export async function getMyRequests(userId: string, role: string) {
     where: { listing: { providerId: userId } },
     orderBy: { createdAt: 'desc' },
     include: {
-      listing: { select: { id: true, title: true } },
+      listing: {
+        select: {
+          id: true,
+          title: true,
+          category: true,
+          price: true,
+          location: true,
+          rating: true,
+          reviewCount: true,
+          provider: { select: { name: true, phone: true, avatarUrl: true } },
+        },
+      },
       client: { select: { id: true, name: true, phone: true, avatarUrl: true } },
     },
   });

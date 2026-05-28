@@ -17,6 +17,7 @@ import DashboardHeader from "@/features/dashboard/components/DashboardHeader";
 import DashboardHome from "@/features/dashboard/DashboardHome";
 import SearchView from "@/features/dashboard/SearchView";
 import RequestsView from "@/features/dashboard/RequestsView";
+import RequestDetailsView from "@/features/dashboard/RequestDetailsView";
 import ReviewsView from "@/features/dashboard/ReviewsView";
 import ProfileView from "@/features/dashboard/ProfileView";
 import { PageLoader } from "@/components/ui/page-loader";
@@ -25,6 +26,7 @@ import type { SidebarView } from "@/features/dashboard/types";
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeView, setActiveView] = useState<SidebarView>("dashboard");
+  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
 
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -48,7 +50,14 @@ const Dashboard = () => {
   };
 
   const handleNav = (view: SidebarView) => {
+    if (view !== "solicitacaoDetalhes") setSelectedRequestId(null);
     setActiveView(view);
+    setSidebarOpen(false);
+  };
+
+  const handleRequestSelect = (id: string) => {
+    setSelectedRequestId(id);
+    setActiveView("solicitacaoDetalhes");
     setSidebarOpen(false);
   };
 
@@ -67,6 +76,11 @@ const Dashboard = () => {
   const completedRequests = useMemo(
     () => requests.filter((r) => r.status === "concluida"),
     [requests]
+  );
+
+  const selectedRequest = useMemo(
+    () => requests.find((r) => r.id === selectedRequestId),
+    [requests, selectedRequestId]
   );
 
   return (
@@ -134,6 +148,16 @@ const Dashboard = () => {
                   statusFilter={statusFilter}
                   onStatusFilterChange={setStatusFilter}
                   userRole={user?.role}
+                  onUpdateStatus={updateStatus}
+                  onRequestSelect={(request) => handleRequestSelect(request.id)}
+                />
+              )}
+
+              {activeView === "solicitacaoDetalhes" && selectedRequest && (
+                <RequestDetailsView
+                  request={selectedRequest}
+                  userRole={user?.role}
+                  onBack={() => handleNav("solicitacoes")}
                   onUpdateStatus={updateStatus}
                 />
               )}

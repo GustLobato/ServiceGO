@@ -22,6 +22,13 @@ export interface ServiceRequest {
   description?: string;
   listingId?: string;
   price?: number;
+  scheduledAt?: string;
+  updatedAt?: string;
+  address?: string;
+  providerAvatarUrl?: string;
+  providerPhone?: string;
+  providerRating?: number;
+  providerReviewCount?: number;
 }
 
 export interface Listing {
@@ -84,6 +91,10 @@ export const INITIAL_REQUESTS: ServiceRequest[] = [
     description: "Vazamento na pia da cozinha com troca de sifão.",
     listingId: "listing-001",
     price: 180,
+    address: "Rua das Flores, 120 - Centro",
+    providerPhone: "+5511999990101",
+    providerRating: 4.8,
+    providerReviewCount: 86,
   },
   {
     id: "req-002",
@@ -96,6 +107,11 @@ export const INITIAL_REQUESTS: ServiceRequest[] = [
     description: "Instalação de tomada 20A no escritório.",
     listingId: "listing-002",
     price: 140,
+    scheduledAt: "2026-05-30T14:00:00-03:00",
+    address: "Av. Brasil, 830 - Sala 402",
+    providerPhone: "+5511999990202",
+    providerRating: 4.9,
+    providerReviewCount: 124,
   },
   {
     id: "req-003",
@@ -108,6 +124,11 @@ export const INITIAL_REQUESTS: ServiceRequest[] = [
     description: "Backup, limpeza e instalação dos programas essenciais.",
     listingId: "listing-003",
     price: 220,
+    scheduledAt: "2026-05-18T10:00:00-03:00",
+    updatedAt: "2026-05-18T16:30:00-03:00",
+    address: "Atendimento remoto",
+    providerRating: 5,
+    providerReviewCount: 52,
   },
   {
     id: "req-004",
@@ -120,6 +141,11 @@ export const INITIAL_REQUESTS: ServiceRequest[] = [
     description: "Limpeza pós-obra em apartamento pequeno.",
     listingId: "listing-004",
     price: 260,
+    scheduledAt: "2026-05-28T09:00:00-03:00",
+    address: "Rua Harmonia, 44 - Vila Madalena",
+    providerPhone: "+5511999990404",
+    providerRating: 4.7,
+    providerReviewCount: 73,
   },
 ];
 

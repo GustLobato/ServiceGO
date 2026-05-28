@@ -21,13 +21,18 @@ interface ApiRequest {
   status: string;
   message?: string;
   price?: number;
+  scheduledAt?: string;
   createdAt: string;
+  updatedAt?: string;
   listing: {
     id: string;
     title: string;
-    category: string;
-    price: number;
-    provider: { id: string; name: string; avatarUrl?: string };
+    category?: string;
+    price?: number;
+    location?: string;
+    rating?: number;
+    reviewCount?: number;
+    provider: { id: string; name: string; avatarUrl?: string; phone?: string };
   };
   client?: { id: string; name: string; avatarUrl?: string };
 }
@@ -54,6 +59,13 @@ function mapRequest(r: ApiRequest): ServiceRequest {
     description: r.message,
     listingId: r.listing?.id,
     price: r.price ?? r.listing?.price,
+    scheduledAt: r.scheduledAt,
+    updatedAt: r.updatedAt,
+    address: r.listing?.location,
+    providerAvatarUrl: r.listing?.provider?.avatarUrl,
+    providerPhone: r.listing?.provider?.phone,
+    providerRating: r.listing?.rating,
+    providerReviewCount: r.listing?.reviewCount,
   };
 }
 
