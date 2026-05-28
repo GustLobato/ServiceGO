@@ -1,7 +1,7 @@
 import { Star, BadgeCheck, Quote } from "lucide-react";
 import { motion } from "framer-motion";
 
-const testimonials = [
+const TESTIMONIALS = [
   {
     name: "Maria Silva",
     initials: "MS",
@@ -11,6 +11,7 @@ const testimonials = [
     rating: 5,
     avatarGradient: "from-pink-400 to-rose-500",
     text: "Encontrei um eletricista excelente em minutos. O processo foi simples e o profissional muito competente e pontual!",
+    featured: false,
   },
   {
     name: "Carlos Oliveira",
@@ -20,8 +21,8 @@ const testimonials = [
     service: "Encanador",
     rating: 5,
     avatarGradient: "from-blue-400 to-indigo-500",
-    featured: true,
     text: "Como prestador, a plataforma me ajudou a conseguir mais clientes e gerenciar minha agenda de forma muito mais eficiente.",
+    featured: true,
   },
   {
     name: "Ana Costa",
@@ -32,17 +33,31 @@ const testimonials = [
     rating: 5,
     avatarGradient: "from-emerald-400 to-teal-500",
     text: "A transparência nas avaliações me deu confiança para contratar. Serviço impecável do início ao fim!",
+    featured: false,
   },
 ];
+
+const StarRow = ({ count, white }: { count: number; white?: boolean }) => (
+  <div className="flex items-center gap-0.5">
+    {Array.from({ length: count }).map((_, i) => (
+      <Star
+        key={i}
+        className={`h-4 w-4 ${white ? "fill-white text-white" : "fill-amber-400 text-amber-400"}`}
+      />
+    ))}
+  </div>
+);
 
 const Testimonials = () => (
   <section id="avaliacoes" className="py-24 bg-white">
     <div className="max-w-7xl mx-auto px-6">
+
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
         className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6"
       >
         <div>
@@ -54,62 +69,65 @@ const Testimonials = () => (
             O que nossos usuários dizem
           </h2>
         </div>
-        <div className="flex items-center gap-3 bg-orange-50 border border-orange-100 rounded-2xl px-5 py-3">
-          <div className="flex items-center gap-0.5">
-            {[1, 2, 3, 4, 5].map((s) => (
-              <Star key={s} className="h-4 w-4 fill-amber-400 text-amber-400" />
-            ))}
+
+        {/* Aggregate rating widget */}
+        <div className="flex items-center gap-3 bg-orange-50 border border-orange-100 rounded-2xl px-5 py-3 self-start md:self-auto">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-orange-600 flex items-center justify-center flex-shrink-0">
+            <Star className="h-5 w-5 fill-white text-white" />
           </div>
           <div>
-            <p className="font-bold text-gray-900 text-sm">4.9 / 5</p>
+            <p className="font-bold text-gray-900 text-sm leading-none mb-1">4.9 / 5.0</p>
             <p className="text-xs text-gray-500">+12.000 avaliações</p>
           </div>
         </div>
       </motion.div>
 
-      {/* Cards grid */}
+      {/* Cards */}
       <div className="grid md:grid-cols-3 gap-6">
-        {testimonials.map((t, i) => (
+        {TESTIMONIALS.map((t, i) => (
           <motion.div
             key={t.name}
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.1 }}
-            className={`relative rounded-2xl p-7 flex flex-col border transition-shadow hover:shadow-lg ${
+            transition={{ delay: i * 0.12, duration: 0.5 }}
+            className={`relative rounded-2xl p-7 flex flex-col border transition-all duration-200 ${
               t.featured
-                ? "bg-gradient-to-br from-primary to-orange-600 border-transparent text-white shadow-xl shadow-orange-200"
-                : "bg-white border-gray-100 shadow-sm"
+                ? "bg-gradient-to-br from-primary via-orange-500 to-orange-600 border-transparent shadow-2xl shadow-orange-200/60 hover:shadow-orange-200/80 hover:-translate-y-0.5"
+                : "bg-white border-gray-100 shadow-sm hover:shadow-lg hover:-translate-y-0.5"
             }`}
           >
             {/* Featured badge */}
             {t.featured && (
-              <span className="inline-flex items-center gap-1 mb-4 px-3 py-1 bg-white/20 text-white text-[11px] font-bold uppercase tracking-wider rounded-full self-start">
-                ★ Destaque
+              <span className="inline-flex items-center gap-1.5 mb-4 px-3 py-1 bg-white/20 text-white text-[11px] font-bold uppercase tracking-wider rounded-full self-start">
+                <Star className="h-3 w-3 fill-white text-white" />
+                Destaque
               </span>
             )}
 
             {/* Quote icon */}
-            <Quote className={`h-8 w-8 mb-3 ${t.featured ? "text-white/30" : "text-orange-100"}`} />
-
-            {/* Stars */}
-            <div className="flex gap-0.5 mb-4">
-              {Array.from({ length: t.rating }).map((_, j) => (
-                <Star
-                  key={j}
-                  className={`h-4 w-4 ${t.featured ? "fill-white text-white" : "fill-amber-400 text-amber-400"}`}
-                />
-              ))}
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 flex-shrink-0 ${
+              t.featured ? "bg-white/15" : "bg-orange-50"
+            }`}>
+              <Quote className={`h-5 w-5 ${t.featured ? "text-white/70" : "text-primary/50"}`} />
             </div>
 
+            {/* Stars */}
+            <StarRow count={t.rating} white={t.featured} />
+
             {/* Text */}
-            <p className={`text-sm leading-relaxed flex-1 mb-6 ${t.featured ? "text-white/90" : "text-gray-600"}`}>
+            <p className={`text-sm leading-relaxed flex-1 mt-4 mb-6 ${t.featured ? "text-white/90" : "text-gray-600"}`}>
               "{t.text}"
             </p>
 
+            {/* Divider */}
+            <div className={`border-t ${t.featured ? "border-white/20" : "border-gray-100"}`} />
+
             {/* Author */}
-            <div className={`flex items-center gap-3 pt-5 border-t ${t.featured ? "border-white/20" : "border-gray-100"}`}>
-              <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${t.avatarGradient} flex items-center justify-center text-white font-bold text-sm flex-shrink-0 ${t.featured ? "ring-2 ring-white/30" : ""}`}>
+            <div className="flex items-center gap-3 pt-5">
+              <div className={`w-11 h-11 rounded-full bg-gradient-to-br ${t.avatarGradient} flex items-center justify-center text-white font-bold text-sm flex-shrink-0 ${
+                t.featured ? "ring-2 ring-white/30" : "ring-2 ring-gray-100"
+              }`}>
                 {t.initials}
               </div>
               <div className="flex-1 min-w-0">
@@ -123,13 +141,16 @@ const Testimonials = () => (
                   {t.role} · {t.location}
                 </p>
               </div>
-              <span className={`text-[11px] font-medium px-2.5 py-1 rounded-full flex-shrink-0 ${t.featured ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"}`}>
+              <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full flex-shrink-0 ${
+                t.featured ? "bg-white/20 text-white" : "bg-gray-100 text-gray-600"
+              }`}>
                 {t.service}
               </span>
             </div>
           </motion.div>
         ))}
       </div>
+
     </div>
   </section>
 );

@@ -1,63 +1,100 @@
-import { Wrench, Zap, Paintbrush, Home, Car, Scissors, Monitor, BookOpen, ArrowRight } from "lucide-react";
+import { Wrench, Zap, Paintbrush, Home, Car, Sparkles, Monitor, BookOpen, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { type ComponentType } from "react";
+import { type LucideProps } from "lucide-react";
 
-const categories = [
+interface Category {
+  icon: ComponentType<LucideProps>;
+  name: string;
+  desc: string;
+  count: string;
+  iconBg: string;
+  iconColor: string;
+  badgeBg: string;
+  badgeText: string;
+}
+
+const CATEGORIES: Category[] = [
   {
-    icon: Wrench,     name: "Encanador",   count: "248 profissionais",
+    icon: Wrench,
+    name: "Encanador",
     desc: "Consertos e instalações hidráulicas",
-    gradient: "from-blue-500 to-blue-700",
-    lightBg: "bg-blue-50", lightColor: "text-blue-600",
-    border: "hover:border-blue-200",
+    count: "248",
+    iconBg: "bg-blue-50",
+    iconColor: "text-blue-600",
+    badgeBg: "bg-blue-50",
+    badgeText: "text-blue-600",
   },
   {
-    icon: Zap,        name: "Eletricista", count: "312 profissionais",
+    icon: Zap,
+    name: "Eletricista",
     desc: "Instalações e reparos elétricos",
-    gradient: "from-amber-400 to-orange-600",
-    lightBg: "bg-amber-50", lightColor: "text-amber-600",
-    border: "hover:border-amber-200",
+    count: "312",
+    iconBg: "bg-amber-50",
+    iconColor: "text-amber-600",
+    badgeBg: "bg-amber-50",
+    badgeText: "text-amber-600",
   },
   {
-    icon: Paintbrush, name: "Pintor",      count: "189 profissionais",
+    icon: Paintbrush,
+    name: "Pintor",
     desc: "Pinturas internas e externas",
-    gradient: "from-rose-400 to-rose-600",
-    lightBg: "bg-rose-50", lightColor: "text-rose-600",
-    border: "hover:border-rose-200",
+    count: "189",
+    iconBg: "bg-rose-50",
+    iconColor: "text-rose-600",
+    badgeBg: "bg-rose-50",
+    badgeText: "text-rose-600",
   },
   {
-    icon: Home,       name: "Reformas",    count: "421 profissionais",
+    icon: Home,
+    name: "Reformas",
     desc: "Reformas e acabamentos em geral",
-    gradient: "from-green-500 to-emerald-700",
-    lightBg: "bg-green-50", lightColor: "text-green-700",
-    border: "hover:border-green-200",
+    count: "421",
+    iconBg: "bg-green-50",
+    iconColor: "text-green-700",
+    badgeBg: "bg-green-50",
+    badgeText: "text-green-700",
   },
   {
-    icon: Car,        name: "Automotivo",  count: "156 profissionais",
+    icon: Car,
+    name: "Automotivo",
     desc: "Manutenção e reparos veiculares",
-    gradient: "from-purple-500 to-purple-700",
-    lightBg: "bg-purple-50", lightColor: "text-purple-600",
-    border: "hover:border-purple-200",
+    count: "156",
+    iconBg: "bg-purple-50",
+    iconColor: "text-purple-600",
+    badgeBg: "bg-purple-50",
+    badgeText: "text-purple-600",
   },
   {
-    icon: Scissors,   name: "Beleza",      count: "503 profissionais",
+    icon: Sparkles,
+    name: "Beleza",
     desc: "Cabeleireiros, manicures e mais",
-    gradient: "from-pink-400 to-pink-600",
-    lightBg: "bg-pink-50", lightColor: "text-pink-600",
-    border: "hover:border-pink-200",
+    count: "503",
+    iconBg: "bg-pink-50",
+    iconColor: "text-pink-600",
+    badgeBg: "bg-pink-50",
+    badgeText: "text-pink-600",
   },
   {
-    icon: Monitor,    name: "Tecnologia",  count: "277 profissionais",
+    icon: Monitor,
+    name: "Tecnologia",
     desc: "Suporte técnico e assistência",
-    gradient: "from-sky-400 to-sky-600",
-    lightBg: "bg-sky-50", lightColor: "text-sky-600",
-    border: "hover:border-sky-200",
+    count: "277",
+    iconBg: "bg-sky-50",
+    iconColor: "text-sky-600",
+    badgeBg: "bg-sky-50",
+    badgeText: "text-sky-600",
   },
   {
-    icon: BookOpen,   name: "Aulas",       count: "198 profissionais",
+    icon: BookOpen,
+    name: "Aulas",
     desc: "Aulas particulares e reforço",
-    gradient: "from-orange-400 to-primary",
-    lightBg: "bg-orange-50", lightColor: "text-orange-600",
-    border: "hover:border-orange-200",
+    count: "198",
+    iconBg: "bg-orange-50",
+    iconColor: "text-orange-600",
+    badgeBg: "bg-orange-50",
+    badgeText: "text-orange-600",
   },
 ];
 
@@ -65,13 +102,15 @@ const Categories = () => {
   const navigate = useNavigate();
 
   return (
-    <section id="servicos" className="py-24 bg-white">
+    <section id="servicos" className="py-24 bg-gray-50/50">
       <div className="max-w-7xl mx-auto px-6">
+
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
           className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-6"
         >
           <div>
@@ -84,37 +123,44 @@ const Categories = () => {
             </h2>
           </div>
           <p className="text-gray-500 max-w-xs md:text-right text-sm leading-relaxed">
-            Mais de 2.300 profissionais verificados prontos para atender você em 8 categorias.
+            Mais de <span className="font-semibold text-gray-700">2.300 profissionais</span> verificados prontos para atender você.
           </p>
         </motion.div>
 
         {/* Category grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {categories.map((cat, i) => (
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {CATEGORIES.map((cat, i) => (
             <motion.button
               key={cat.name}
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
+              transition={{ delay: i * 0.07, duration: 0.45 }}
               onClick={() => navigate("/cadastro")}
-              className={`group relative bg-white border border-gray-100 rounded-2xl overflow-hidden text-left hover:shadow-lg transition-all duration-200 ${cat.border} hover:border`}
+              className="group bg-white border border-gray-100 rounded-2xl overflow-hidden text-left hover:shadow-xl hover:-translate-y-1.5 hover:border-gray-200 transition-all duration-200"
             >
-              {/* Card top gradient */}
-              <div className={`h-2 bg-gradient-to-r ${cat.gradient}`} />
+              {/* Colored icon area */}
+              <div className={`h-[88px] ${cat.iconBg} flex items-center justify-center relative overflow-hidden`}>
+                {/* Soft inner glow blob */}
+                <div className="absolute w-24 h-24 rounded-full bg-white/50 blur-xl" />
+                <cat.icon className={`h-9 w-9 ${cat.iconColor} relative z-10 group-hover:scale-110 transition-transform duration-200`} />
+              </div>
 
-              <div className="p-5">
-                <div className={`w-14 h-14 rounded-2xl ${cat.lightBg} flex items-center justify-center mb-4 group-hover:scale-105 transition-transform`}>
-                  <cat.icon className={`h-7 w-7 ${cat.lightColor}`} />
-                </div>
-
-                <p className={`font-display font-bold text-base ${cat.lightColor} mb-1`}>{cat.name}</p>
-                <p className="text-xs text-gray-500 leading-snug mb-3">{cat.desc}</p>
+              {/* Text content */}
+              <div className="p-4 sm:p-5">
+                <p className="font-display font-bold text-sm sm:text-base text-gray-900 mb-1 leading-tight">
+                  {cat.name}
+                </p>
+                <p className="text-[11px] sm:text-xs text-gray-500 leading-snug mb-4">
+                  {cat.desc}
+                </p>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-semibold text-gray-400">{cat.count}</span>
-                  <div className={`w-7 h-7 rounded-full ${cat.lightBg} flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity`}>
-                    <ArrowRight className={`h-3.5 w-3.5 ${cat.lightColor}`} />
+                  <span className={`inline-flex items-center text-[11px] font-semibold px-2.5 py-1 rounded-full ${cat.badgeBg} ${cat.badgeText}`}>
+                    {cat.count} profis.
+                  </span>
+                  <div className={`w-6 h-6 rounded-full ${cat.iconBg} flex items-center justify-center opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-200`}>
+                    <ArrowRight className={`h-3 w-3 ${cat.iconColor}`} />
                   </div>
                 </div>
               </div>
@@ -122,21 +168,23 @@ const Categories = () => {
           ))}
         </div>
 
-        {/* CTA link */}
+        {/* Bottom CTA */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mt-8 text-center"
+          transition={{ delay: 0.4 }}
+          className="mt-10 text-center"
         >
           <button
             onClick={() => navigate("/cadastro")}
-            className="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:underline"
+            className="inline-flex items-center gap-2 text-primary font-semibold text-sm hover:gap-2.5 transition-all"
           >
             Ver todos os serviços disponíveis
             <ArrowRight className="h-4 w-4" />
           </button>
         </motion.div>
+
       </div>
     </section>
   );
