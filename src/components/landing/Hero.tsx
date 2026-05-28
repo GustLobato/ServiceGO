@@ -36,7 +36,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative pt-24 pb-20 overflow-hidden bg-white">
+    <section className="relative pt-28 pb-20 overflow-hidden bg-white">
       {/* Background blobs */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-orange-100/50 rounded-full blur-[120px] -translate-y-1/4 translate-x-1/4 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-50/80 rounded-full blur-[100px] translate-y-1/4 -translate-x-1/4 pointer-events-none" />
