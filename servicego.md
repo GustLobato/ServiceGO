@@ -4,20 +4,17 @@ draft: false
 language: pt-br
 featured_image: images/featured/featured-img-placeholder.png 
 summary: O ServiceGO é uma plataforma brasileira de marketplace de serviços que conecta clientes a prestadores autônomos locais, contando com um sistema inovador de geolocalização e acompanhamento de rota ativa em tempo real, desenvolvido sob rígidos padrões de privacidade e segurança da LGPD.
-author: UniFil
+author: Gustavo Gabriel, Romulo Gusso, João Nagata e João Bueno
 categories: Blog
-tags: ["ADS", "ES", "CC", "Tecnologia", "Educação", "Geolocalização", "LGPD", "React"] 
-linkandroid: https://github.com/GustLobato/ServiceGO
-linkios: https://github.com/GustLobato/ServiceGO
-linkweb: https://servicego.online/
-linkblog: https://github.com/GustLobato/ServiceGO#readme
-linkvideo: https://github.com/GustLobato/ServiceGO
+tags: ["ADS", "ES", "CC", "Tecnologia", "Educação", "Geolocalização", "LGPD", "React"]
+linkweb: servicego.online
+GitHub: https://github.com/GustLobato/ServiceGO
 
 ---
 
 __Advertisement :smile:__
 
-- __[ServiceGO](https://servicego.online/)__ - A maior e mais segura plataforma de contratação de profissionais autônomos da sua região.
+- __[ServiceGO](http://localhost:8081/)__ - A maior e mais segura plataforma de contratação de profissionais autônomos da sua região.
 - __[UniFil Engenharia de Software / ADS](https://unifil.br/)__ - Projeto de Extensão Universitária focado em impacto social através da tecnologia.
 
 Você vai adorar conhecer a fundo a estrutura deste projeto!
@@ -26,17 +23,13 @@ Você vai adorar conhecer a fundo a estrutura deste projeto!
 
 # ABAIXO O CONTEÚDO DE EXPLICAÇÃO DO SEU APLICATIVO
 
-# 🌟 ServiceGO: Conexão Segura e Rastreamento de Serviços
-
-<p align="center">
-  <img src="images/featured/logo.png" alt="ServiceGO Logo" width="180" height="180" style="border-radius: 40px;" />
-</p>
+# ServiceGO: Conexão Segura e Rastreamento de Serviços
 
 O **ServiceGO** é um marketplace brasileiro que revoluciona a contratação de prestadores de serviços autônomos (encanadores, eletricistas, pintores, diaristas, técnicos e reformadores). O projeto foi concebido e aprimorado como um **Projeto de Extensão Universitária (UniFil)**, unindo conceitos avançados de engenharia de software à realidade social, entregando uma ferramenta com alta usabilidade, interatividade e conformidade legal.
 
 ---
 
-## 🚀 Principais Funcionalidades
+## Principais Funcionalidades
 
 ### 1. Mini Mapa e Rastreamento em Tempo Real
 O coração visual do ServiceGO é o seu **Mini Mapa de Acompanhamento Interativo**, que opera em dois modos distintos:
@@ -59,7 +52,7 @@ Todo o fluxo de coleta e exibição de dados pessoais foi planejado para resguar
 
 ---
 
-## 🛠️ Stack Tecnológica
+##  Stack Tecnológica
 
 O projeto foi construído utilizando práticas modernas de desenvolvimento web de alto desempenho:
 
@@ -76,7 +69,7 @@ O projeto foi construído utilizando práticas modernas de desenvolvimento web d
 
 ---
 
-## 📋 Estrutura de Páginas e Rotas
+## Estrutura de Páginas e Rotas
 
 O sistema dispõe de rotas otimizadas por *lazy loading*, reduzindo drasticamente o tamanho do bundle inicial:
 
@@ -89,12 +82,12 @@ O sistema dispõe de rotas otimizadas por *lazy loading*, reduzindo drasticament
    * **Solicitações:** Acompanhamento de serviços pendentes, aceitos e em andamento.
    * **Avaliações:** Gestão de reviews de serviços concluídos.
    * **Perfil:** Edição de dados, configurações de segurança e painel de privacidade de dados (LGPD).
-5. **`Política de Privacidade (/privacy)`**: Documento em linguagem simples explicando a coleta, termos de GPS e DPO (`privacidade@servicego.online`).
+5. **`Política de Privacidade (/privacy)`**: Documento em linguagem simples explicando a coleta, termos de GPS e DPO (`privacidade@servicego.com.br`).
 6. **`Termos de Uso (/terms)`**: Direitos de interposição, limitações da plataforma e regras de convivência.
 
 ---
 
-## 🔒 Princípios de Segurança Implementados
+## Princípios de Segurança Implementados
 
 * **Minimização de Dados:** Coleta restrita ao estritamente necessário para conectar o cliente ao prestador.
 * **Exclusão Segura e Logs:** Armazenamento seguro de logs mínimos técnicos exigidos pelo Marco Civil por até 6 meses.
@@ -104,4 +97,4 @@ O sistema dispõe de rotas otimizadas por *lazy loading*, reduzindo drasticament
 ---
 
 > 🎓 **Projeto de Extensão Universitária**
-> Desenvolvido em caráter acadêmico pela equipe da **UniFil (Engenharia de Software / Análise e Desenvolvimento de Sistemas)** para promover inovação social e inclusão tecnológica de trabalhadores autônomos locais.
+> Desenvolvido em caráter acadêmico pela equipe da **UniFil (Engenharia de Software / Ciências da Computação)** para promover inovação social e inclusão tecnológica de trabalhadores autônomos locais.
