@@ -20,52 +20,7 @@ interface Professional {
   iconHtml: string;
 }
 
-const NEARBY_PROFESSIONALS: Professional[] = [
-  { 
-    id: "prof-1", 
-    name: "Carlos Silva", 
-    category: "Eletricista", 
-    coordsOffset: [0.0048, -0.0052], 
-    rating: 4.9, 
-    services: 128,
-    iconBg: "bg-amber-100 border-amber-300",
-    iconColor: "text-amber-600",
-    iconHtml: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`
-  },
-  { 
-    id: "prof-2", 
-    name: "Ana Oliveira", 
-    category: "Pintora", 
-    coordsOffset: [-0.0045, 0.0058], 
-    rating: 4.8, 
-    services: 92,
-    iconBg: "bg-rose-100 border-rose-300",
-    iconColor: "text-rose-600",
-    iconHtml: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-paintbrush"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.8a2 2 0 0 0 2-1.8l.2-2.2a2 2 0 0 0-2-2H14z"/><path d="M6 12H2"/><path d="M18 12h4"/></svg>`
-  },
-  { 
-    id: "prof-3", 
-    name: "Pedro Souza", 
-    category: "Encanador", 
-    coordsOffset: [0.0056, 0.0042], 
-    rating: 4.7, 
-    services: 114,
-    iconBg: "bg-blue-100 border-blue-300",
-    iconColor: "text-blue-600",
-    iconHtml: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wrench"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`
-  },
-  { 
-    id: "prof-4", 
-    name: "Mariana Costa", 
-    category: "Diarista", 
-    coordsOffset: [-0.0052, -0.0048], 
-    rating: 5.0, 
-    services: 73,
-    iconBg: "bg-pink-100 border-pink-300",
-    iconColor: "text-pink-600",
-    iconHtml: `<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>`
-  }
-];
+const NEARBY_PROFESSIONALS: Professional[] = [];
 
 const LiveTrackerMap = ({ userLocation, isLocating }: LiveTrackerMapProps) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -434,7 +389,7 @@ const LiveTrackerMap = ({ userLocation, isLocating }: LiveTrackerMapProps) => {
             <p className="text-[10px] sm:text-xs text-gray-400 mt-1 leading-none">
               {activeOrder 
                 ? (currentStep === 3 ? `${activeOrder.name} chegou ao destino!` : `${activeOrder.name} está a caminho`) 
-                : "Selecione um profissional no mapa para simular"}
+                : "Aguardando cadastro de prestadores na sua área"}
             </p>
           </div>
         </div>
@@ -448,8 +403,8 @@ const LiveTrackerMap = ({ userLocation, isLocating }: LiveTrackerMapProps) => {
             Voltar ao Mapa
           </button>
         ) : (
-          <div className="px-3 py-1.5 rounded-xl bg-orange-50 text-[10px] sm:text-xs font-extrabold text-primary border border-orange-100/50 uppercase tracking-wide">
-            {NEARBY_PROFESSIONALS.length} Disponíveis
+          <div className="px-3 py-1.5 rounded-xl bg-gray-100 text-[10px] sm:text-xs font-extrabold text-gray-500 border border-gray-200 uppercase tracking-wide">
+            Nenhum Ativo
           </div>
         )}
       </div>
@@ -494,12 +449,12 @@ const LiveTrackerMap = ({ userLocation, isLocating }: LiveTrackerMapProps) => {
           <div className="absolute right-4 top-4 z-[400] flex flex-col gap-2 pointer-events-none">
             {/* Card 1: Active professionals count */}
             <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-md border border-gray-150 p-3 flex items-center gap-3 w-[180px] pointer-events-auto">
-              <div className="w-8 h-8 rounded-xl bg-green-50 flex items-center justify-center text-green-600 flex-shrink-0">
-                <Compass className="h-4.5 w-4.5 animate-pulse" />
+              <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 flex-shrink-0">
+                <Compass className="h-4.5 w-4.5" />
               </div>
               <div className="min-w-0">
                 <p className="text-[9px] font-extrabold text-gray-400 uppercase tracking-wider">Serviços Próximos</p>
-                <p className="text-xs font-extrabold text-gray-900 mt-0.5 leading-none">+12 na sua área</p>
+                <p className="text-xs font-extrabold text-gray-500 mt-0.5 leading-none">Nenhum na sua área</p>
               </div>
             </div>
 
@@ -591,13 +546,13 @@ const LiveTrackerMap = ({ userLocation, isLocating }: LiveTrackerMapProps) => {
         ) : (
           /* READY / INSTRUCTIONS MODE STEPPER */
           <div className="flex items-center gap-3 py-1">
-            <div className="w-8 h-8 rounded-full bg-orange-50 border border-orange-150 flex items-center justify-center text-primary flex-shrink-0 animate-bounce">
+            <div className="w-8 h-8 rounded-full bg-orange-50 border border-orange-150 flex items-center justify-center text-primary flex-shrink-0">
               <Search className="h-4 w-4" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-extrabold text-gray-900 leading-tight">Marketplace ServiceGO Ativo</p>
+              <p className="text-xs font-extrabold text-gray-900 leading-tight">Sem profissionais cadastrados nesta região ainda</p>
               <p className="text-[10px] text-gray-500 mt-0.5 leading-normal">
-                Clique nos pins laranjas no mapa para ver os dados do profissional e **simular o rastreamento em tempo real**!
+                Cadastre-se como prestador de serviço para ser o primeiro profissional a aparecer na sua cidade!
               </p>
             </div>
           </div>
