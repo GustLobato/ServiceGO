@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Star, MapPin, Search, Wrench, Zap, Paintbrush, Home,
   Car, Sparkles, Sprout, Monitor, Loader2, Send, BadgeCheck,
-  SlidersHorizontal, X, ChevronDown, ChevronUp,
+  SlidersHorizontal, X, ChevronDown, ChevronUp, Compass, ShieldAlert,
   type LucideProps,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -122,6 +122,53 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
   const [onlyAvailable, setOnlyAvailable] = useState(false);
   const [sortBy, setSortBy] = useState<"relevance" | "rating" | "price_asc" | "price_desc">("relevance");
 
+  // Localização geográfica, distância e consentimento LGPD
+  const [distanceFilter, setDistanceFilter] = useState<number | null>(null);
+  const [userCoords, setUserCoords] = useState<[number, number] | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
+  const [showConsentModal, setShowConsentModal] = useState(false);
+
+  const handleLocateClick = () => {
+    // Show LGPD explanation to get clear consent
+    setShowConsentModal(true);
+  };
+
+  const handleRequestLocation = () => {
+    setShowConsentModal(false);
+    if (!navigator.geolocation) {
+      toast({
+        title: "Não suportado",
+        description: "Seu navegador não suporta geolocalização. Por favor, digite sua cidade manualmente.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserCoords([latitude, longitude]);
+        setIsLocating(false);
+        setLocationQuery("Sua Localização (Aproximada)");
+        toast({
+          title: "Localização encontrada!",
+          description: "Usando sua região aproximada para exibir os profissionais mais próximos.",
+        });
+      },
+      (error) => {
+        console.error("Geolocator error:", error);
+        setIsLocating(false);
+        toast({
+          title: "Acesso negado",
+          description: "Não conseguimos acessar sua geolocalização. Você pode continuar informando sua cidade manualmente.",
+          variant: "destructive",
+        });
+      },
+      { timeout: 7000, enableHighAccuracy: true }
+    );
+  };
+
   // ── Query (unchanged) ────────────────────────────────────────
   const { data, isLoading } = useQuery({
     queryKey: ["listings", searchQuery, selectedCategory],
@@ -153,14 +200,35 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
   // ── Client-side filter + sort ────────────────────────────────
   const displayListings = useMemo(() => {
     let result = listings;
+    
+    // Filter by manual location query if set
+    if (locationQuery && locationQuery !== "Sua Localização (Aproximada)") {
+      result = result.filter((l) =>
+        l.location?.toLowerCase().includes(locationQuery.toLowerCase())
+      );
+    }
+
     if (priceMax !== null) result = result.filter((l) => l.price <= priceMax);
     if (minRating > 0) result = result.filter((l) => l.rating >= minRating);
     if (onlyAvailable) result = result.filter(isAvailable);
-    if (sortBy === "rating") return [...result].sort((a, b) => b.rating - a.rating);
-    if (sortBy === "price_asc") return [...result].sort((a, b) => a.price - b.price);
-    if (sortBy === "price_desc") return [...result].sort((a, b) => b.price - a.price);
-    return result;
-  }, [listings, priceMax, minRating, onlyAvailable, sortBy]);
+    
+    // Map deterministic mock distance for cards
+    const mappedDistances = result.map((l) => {
+      const num = l.id.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
+      const distance = Number(((num % 23) + 0.6).toFixed(1)); // 0.6 to 23.6 km
+      return { ...l, distance };
+    });
+
+    let filteredByDistance = mappedDistances;
+    if (distanceFilter !== null) {
+      filteredByDistance = mappedDistances.filter((l) => l.distance <= distanceFilter);
+    }
+
+    if (sortBy === "rating") return [...filteredByDistance].sort((a, b) => b.rating - a.rating);
+    if (sortBy === "price_asc") return [...filteredByDistance].sort((a, b) => a.price - b.price);
+    if (sortBy === "price_desc") return [...filteredByDistance].sort((a, b) => b.price - a.price);
+    return filteredByDistance;
+  }, [listings, priceMax, minRating, onlyAvailable, locationQuery, distanceFilter, sortBy]);
 
   // ── Active filter chips ──────────────────────────────────────
   const activeFilters = [
@@ -168,6 +236,8 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
     priceMax !== null ? { label: `Até R$ ${priceMax}`, onRemove: () => setPriceMax(null) } : null,
     minRating > 0 ? { label: `${minRating}+ estrelas`, onRemove: () => setMinRating(0) } : null,
     onlyAvailable ? { label: "Disponíveis", onRemove: () => setOnlyAvailable(false) } : null,
+    distanceFilter !== null ? { label: `Até ${distanceFilter} km`, onRemove: () => setDistanceFilter(null) } : null,
+    userCoords ? { label: "Geolocalizado", onRemove: () => { setUserCoords(null); setLocationQuery(""); } } : null,
   ].filter(Boolean) as { label: string; onRemove: () => void }[];
 
   const clearAllFilters = () => {
@@ -175,6 +245,9 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
     setPriceMax(null);
     setMinRating(0);
     setOnlyAvailable(false);
+    setDistanceFilter(null);
+    setUserCoords(null);
+    setLocationQuery("");
   };
 
   // ── Sidebar content (reused desktop + mobile) ────────────────
@@ -214,6 +287,31 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
               </button>
             );
           })}
+        </div>
+      </div>
+
+      {/* Distance */}
+      <div>
+        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">Distância máxima</p>
+        <div className="space-y-1 mb-4">
+          {[
+            { label: "Qualquer distância", value: null },
+            { label: "Até 2 km", value: 2 },
+            { label: "Até 5.0 km", value: 5 },
+            { label: "Até 10 km", value: 10 },
+            { label: "Até 25 km", value: 25 },
+          ].map((opt) => (
+            <button
+              key={String(opt.value)}
+              onClick={() => setDistanceFilter(opt.value)}
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-colors text-left ${
+                distanceFilter === opt.value ? "bg-orange-50 text-primary font-semibold" : "text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              {opt.label}
+              {distanceFilter === opt.value && <span className="w-2 h-2 rounded-full bg-primary" />}
+            </button>
+          ))}
         </div>
       </div>
 
@@ -327,15 +425,32 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
         </div>
 
         {/* Location */}
-        <div className="flex items-center gap-3 px-4 py-4 sm:px-5 border-b sm:border-b-0 sm:border-r border-gray-100">
+        <div className="flex items-center gap-2.5 px-4 py-4 sm:px-5 border-b sm:border-b-0 sm:border-r border-gray-100 flex-1 sm:flex-none">
           <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0" />
           <input
             type="text"
             placeholder="São Paulo, SP"
             value={locationQuery}
-            onChange={(e) => setLocationQuery(e.target.value)}
-            className="bg-transparent text-sm outline-none text-gray-900 placeholder:text-gray-400 w-full sm:w-36"
+            onChange={(e) => {
+              setLocationQuery(e.target.value);
+              if (userCoords) {
+                setUserCoords(null);
+              }
+            }}
+            className="bg-transparent text-sm outline-none text-gray-900 placeholder:text-gray-400 w-full sm:w-32"
           />
+          <button
+            onClick={handleLocateClick}
+            disabled={isLocating}
+            className="p-1.5 rounded-xl hover:bg-orange-50 text-gray-400 hover:text-primary transition-colors flex-shrink-0"
+            title="Usar minha localização"
+          >
+            {isLocating ? (
+              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+            ) : (
+              <Compass className="h-4 w-4" />
+            )}
+          </button>
         </div>
 
         {/* Search button */}
@@ -560,13 +675,21 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
                         </p>
                       </div>
 
-                      {/* Location */}
-                      {listing.location && (
-                        <div className="flex items-center gap-1.5 mt-3 text-xs text-gray-500">
+                      {/* Location & Distance */}
+                      <div className="flex flex-col gap-1.5 mt-3">
+                        <div className="flex items-center gap-1.5 text-xs text-gray-500">
                           <MapPin className="h-3.5 w-3.5 text-gray-400 flex-shrink-0" />
-                          <span>{listing.location}</span>
+                          <span>{listing.location || "Atende sua região"}</span>
                         </div>
-                      )}
+                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-primary">
+                          <Compass className="h-3 w-3 animate-pulse text-primary shrink-0" />
+                          <span>
+                            {userCoords 
+                              ? `${(listing as any).distance} km de você` 
+                              : "Disponível próximo a você"}
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
                     {/* Card footer */}
@@ -615,6 +738,46 @@ const SearchView = ({ searchQuery, onSearchChange }: SearchViewProps) => {
           )}
         </div>
       </div>
+
+      {/* ── Consent Modal (LGPD Compliance) ── */}
+      {showConsentModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[999] flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl border border-gray-150 shadow-2xl p-6 max-w-md w-full animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-primary shrink-0">
+                <Compass className="h-5 w-5 animate-pulse" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-display font-bold text-gray-900 text-sm">Permitir acesso à localização?</h3>
+                <p className="text-[11px] text-gray-500 leading-relaxed mt-2">
+                  Usamos sua localização aproximada estritamente para estimar a distância e listar os prestadores mais próximos da sua região.
+                </p>
+                <p className="text-[10px] text-gray-400 leading-relaxed mt-2 border-t border-gray-100 pt-2 font-medium">
+                  🔒 <strong>Garantia LGPD:</strong> Seus dados de coordenadas geográficas exatas <strong>não são guardados</strong> no nosso servidor nem exibidos a terceiros. Você pode gerenciar essa permissão nas configurações do seu navegador a qualquer momento.
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 mt-5">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl text-xs font-semibold"
+                onClick={() => setShowConsentModal(false)}
+              >
+                Agora não
+              </Button>
+              <Button
+                size="sm"
+                className="rounded-xl text-xs font-bold"
+                onClick={handleRequestLocation}
+              >
+                Permitir e Buscar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

@@ -30,22 +30,50 @@ const Footer = () => {
             </div>
           </div>
 
-          {[
-            { title: "Plataforma", links: ["Como funciona", "Categorias", "Para prestadores", "Preços"] },
-            { title: "Empresa", links: ["Sobre nós", "Blog", "Carreiras", "Contato"] },
-            { title: "Legal", links: ["Termos de Uso", "Privacidade", "Cookies"] },
-          ].map((col) => (
-            <div key={col.title}>
-              <h4 className="font-semibold text-sm text-gray-900 mb-4">{col.title}</h4>
-              <ul className="space-y-3">
-                {col.links.map((l) => (
-                  <li key={l}>
-                    <button onClick={() => soon(l)} className="text-sm text-gray-500 hover:text-gray-900 transition-colors text-left">{l}</button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Column 1: Plataforma */}
+          <div>
+            <h4 className="font-semibold text-sm text-gray-900 mb-4">Plataforma</h4>
+            <ul className="space-y-3">
+              {["Como funciona", "Categorias", "Para prestadores", "Preços"].map((l) => (
+                <li key={l}>
+                  <button onClick={() => soon(l)} className="text-sm text-gray-500 hover:text-gray-900 transition-colors text-left">{l}</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 2: Empresa */}
+          <div>
+            <h4 className="font-semibold text-sm text-gray-900 mb-4">Empresa</h4>
+            <ul className="space-y-3">
+              {["Sobre nós", "Blog", "Carreiras", "Contato"].map((l) => (
+                <li key={l}>
+                  <button onClick={() => soon(l)} className="text-sm text-gray-500 hover:text-gray-900 transition-colors text-left">{l}</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3: Legal */}
+          <div>
+            <h4 className="font-semibold text-sm text-gray-900 mb-4">Legal</h4>
+            <ul className="space-y-3">
+              <li>
+                <Link to="/terms" className="text-sm text-gray-500 hover:text-gray-900 transition-colors text-left block">Termos de Uso</Link>
+              </li>
+              <li>
+                <Link to="/privacy" className="text-sm text-gray-500 hover:text-gray-900 transition-colors text-left block">Privacidade</Link>
+              </li>
+              <li>
+                <button 
+                  onClick={() => window.dispatchEvent(new Event("show-cookie-banner"))} 
+                  className="text-sm text-gray-500 hover:text-gray-900 transition-colors text-left block"
+                >
+                  Gerenciar Cookies
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-400">

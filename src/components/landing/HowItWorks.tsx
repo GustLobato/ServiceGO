@@ -96,7 +96,7 @@ const HowItWorks = () => (
           >
             {/* Desktop connector arrows */}
             {i < STEPS.length - 1 && (
-              <div className="hidden md:flex absolute -right-5 lg:-right-7 top-[38px] z-10">
+              <div className="hidden md:flex absolute -right-5 lg:-right-7 top-[44px] z-10">
                 <ChevronRight className="h-5 w-5 text-gray-300" />
               </div>
             )}

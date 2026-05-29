@@ -430,25 +430,21 @@ const Cadastro = () => {
                 />
                 <label htmlFor="terms" className="text-xs text-gray-500 leading-relaxed cursor-pointer">
                   Li e aceito os{" "}
-                  <button
-                    type="button"
+                  <Link
+                    to="/terms"
+                    target="_blank"
                     className="text-primary underline font-medium hover:text-primary/80"
-                    onClick={() =>
-                      toast({ title: "Em breve", description: "Termos de uso disponíveis em breve." })
-                    }
                   >
                     Termos de uso
-                  </button>
+                  </Link>
                   {" "}e a{" "}
-                  <button
-                    type="button"
+                  <Link
+                    to="/privacy"
+                    target="_blank"
                     className="text-primary underline font-medium hover:text-primary/80"
-                    onClick={() =>
-                      toast({ title: "Em breve", description: "Política de privacidade disponível em breve." })
-                    }
                   >
                     Política de privacidade
-                  </button>
+                  </Link>
                   {" "}da ServiceGO.
                 </label>
               </div>

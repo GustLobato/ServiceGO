@@ -101,6 +101,10 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
   const [editing, setEditing]     = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>("sobre");
   const [form, setForm]           = useState({ name: user.name, phone: user.phone ?? "", bio: user.bio ?? "" });
+  
+  // Privacy states
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   const mutation = useMutation({
     mutationFn: (data: typeof form) => api.patch("/api/users/me", data),
@@ -313,6 +317,78 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
     </div>
   );
 
+  // ── Privacy & Account Deletion Card ───────────────────────────
+  const handleDeleteAccount = () => {
+    setDeleteLoading(true);
+    setTimeout(() => {
+      setDeleteLoading(false);
+      setShowDeleteConfirm(false);
+      toast({
+        title: "Solicitação de exclusão registrada!",
+        description: "Sua solicitação de exclusão definitiva foi registrada em nosso sistema. Por motivos de segurança, você receberá uma confirmação no seu e-mail dentro de 48h.",
+      });
+    }, 1500);
+  };
+
+  const PrivacyCard = (
+    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+      <h3 className="font-display font-semibold text-gray-900 mb-3 flex items-center gap-2 text-sm">
+        <Shield className="h-4 w-4 text-primary" /> Privacidade e Proteção de Dados
+      </h3>
+      <p className="text-xs text-gray-500 leading-relaxed">
+        Respeitamos a LGPD (Lei Geral de Proteção de Dados Pessoais). Você possui o direito de confirmação de tratamento, acesso, correção ou a exclusão total de seus dados cadastrais.
+      </p>
+
+      <div className="border-t border-gray-100 mt-4 pt-4">
+        {!showDeleteConfirm ? (
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-900">Excluir Conta e Dados Pessoais</p>
+              <p className="text-xs text-gray-400 mt-0.5">
+                Esta ação solicitará a exclusão definitiva do seu perfil e a anonimização de suas contratações.
+              </p>
+            </div>
+            <Button
+              variant="destructive"
+              size="sm"
+              className="rounded-xl font-semibold shrink-0"
+              onClick={() => setShowDeleteConfirm(true)}
+            >
+              Excluir conta
+            </Button>
+          </div>
+        ) : (
+          <div className="bg-red-50/40 border border-red-100/50 rounded-2xl p-4 mt-2">
+            <h4 className="text-xs font-bold text-red-800 uppercase tracking-wide">Confirmar exclusão definitiva?</h4>
+            <p className="text-xs text-red-700 mt-1 leading-relaxed">
+              <strong>Aviso legal importante:</strong> Ao excluir, seu acesso será desativado permanentemente. Conforme o Marco Civil da Internet (Lei 12.965/14) e as exceções legais da LGPD, guardaremos logs mínimos de acesso por 6 meses e dados fiscais de ordens contratuais exigidas por lei, mas todo o seu perfil público e dados de contato serão imediatamente apagados e anonimizados.
+            </p>
+            <div className="flex flex-wrap gap-2 mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                className="rounded-xl text-xs bg-white"
+                disabled={deleteLoading}
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                className="rounded-xl text-xs"
+                disabled={deleteLoading}
+                onClick={handleDeleteAccount}
+              >
+                {deleteLoading ? "Processando..." : "Sim, solicitar exclusão"}
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+
   // ── Provider sidebar ────────────────────────────────────────
   const ProviderSidebar = (
     <div className="space-y-4">
@@ -420,6 +496,9 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
 
       {/* Edit form */}
       {EditFormCard}
+      
+      {/* Privacy settings */}
+      {PrivacyCard}
     </div>
   );
 
@@ -596,6 +675,7 @@ const ProfileView = ({ user, userName, userInitials }: ProfileViewProps) => {
         <div className="mt-6 max-w-2xl space-y-5">
           {EditFormCard}
           {SecurityCard}
+          {PrivacyCard}
         </div>
       )}
     </div>

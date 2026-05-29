@@ -1,8 +1,9 @@
-import { type ComponentType } from "react";
+import { type ComponentType, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle2, Star, Users, MapPin, Zap, type LucideProps } from "lucide-react";
 import { motion } from "framer-motion";
+import LiveTrackerMap from "./LiveTrackerMap";
 
 interface ActivityCard {
   id: string;
@@ -28,7 +29,7 @@ const ACTIVITY_CARDS: ActivityCard[] = [
     sub: "Encanamento · 2min atrás",
     initial: { opacity: 0, x: 24 },
     delay: 0.55,
-    position: "top-8 right-0",
+    position: "top-8 left-[calc(50%+80px)]",
   },
   {
     id: "avaliacao",
@@ -40,7 +41,7 @@ const ACTIVITY_CARDS: ActivityCard[] = [
     sub: "Carlos recebeu nova review",
     initial: { opacity: 0, x: 24 },
     delay: 0.72,
-    position: "top-[58%] right-0",
+    position: "top-[58%] left-[calc(50%+130px)]",
   },
   {
     id: "profissionais",
@@ -52,7 +53,7 @@ const ACTIVITY_CARDS: ActivityCard[] = [
     sub: "Ativos na sua região hoje",
     initial: { opacity: 0, x: -24 },
     delay: 0.88,
-    position: "bottom-8 left-0",
+    position: "bottom-8 right-[calc(50%+120px)]",
   },
 ];
 
@@ -62,8 +63,33 @@ const STATS = [
   { value: "4.9★",   label: "Avaliação média" },
 ];
 
-const Hero = () => (
-  <section className="relative min-h-[90vh] flex items-center pt-24 pb-12 sm:pt-28 sm:pb-16 overflow-hidden bg-white">
+const Hero = () => {
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [isLocating, setIsLocating] = useState(false);
+
+  const handleUseLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocalização não é suportada por seu navegador.");
+      return;
+    }
+    setIsLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        setUserLocation([latitude, longitude]);
+        setIsLocating(false);
+      },
+      (error) => {
+        console.error("Erro de geolocalização:", error);
+        setIsLocating(false);
+        alert("Não foi possível obter sua localização. Por favor, verifique suas permissões.");
+      },
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  };
+
+  return (
+    <section className="relative min-h-[90vh] flex items-center pt-24 pb-12 sm:pt-28 sm:pb-16 overflow-hidden bg-white">
     {/* Background ambient blobs */}
     <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-orange-100/40 rounded-full blur-[150px] -translate-y-1/3 translate-x-1/3 pointer-events-none" />
     <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-50/70 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/3 pointer-events-none" />
@@ -137,10 +163,12 @@ const Hero = () => (
             <Button
               size="lg"
               variant="outline"
+              onClick={handleUseLocation}
+              disabled={isLocating}
               className="w-full sm:w-auto gap-2 h-14 px-6 rounded-2xl text-gray-600 border-gray-200 hover:bg-gray-50 font-medium"
             >
-              <MapPin className="h-4 w-4 text-primary" />
-              Usar minha localização
+              <MapPin className={`h-4 w-4 text-primary ${isLocating ? "animate-spin" : ""}`} />
+              {isLocating ? "Localizando..." : "Usar minha localização"}
             </Button>
           </div>
 
@@ -157,12 +185,15 @@ const Hero = () => (
             ))}
           </div>
 
-          {/* Mobile activity cards */}
-          <div className="lg:hidden mt-10 flex gap-3 overflow-x-auto pb-1 -mx-1 px-1">
-            {ACTIVITY_CARDS.map((card) => (
-              <div
+          {/* Activity cards — below stats */}
+          <div className="mt-8 flex flex-wrap gap-3">
+            {ACTIVITY_CARDS.map((card, i) => (
+              <motion.div
                 key={card.id}
-                className="flex-shrink-0 flex items-center gap-3 bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.5 + i * 0.12, ease: "easeOut" }}
+                className="flex items-center gap-3 bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3"
               >
                 <div className={`w-9 h-9 rounded-xl ${card.iconBg} flex items-center justify-center flex-shrink-0`}>
                   <card.icon className={`h-4 w-4 ${card.iconColor}`} />
@@ -172,88 +203,20 @@ const Hero = () => (
                   <p className="text-[11px] text-gray-500 mt-0.5 whitespace-nowrap">{card.sub}</p>
                 </div>
                 <span className={`w-1.5 h-1.5 rounded-full ${card.dot} flex-shrink-0`} />
-              </div>
+              </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* ── Right: floating card composition (desktop) ── */}
-        <div className="hidden lg:block relative h-[540px]">
-          {/* Glow behind cards */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-gradient-to-br from-orange-100 to-amber-50 rounded-full blur-2xl opacity-70 pointer-events-none" />
-
-          {/* Central provider card */}
-          <motion.div
-            initial={{ opacity: 0, y: 28, scale: 0.94 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 bg-white rounded-3xl shadow-2xl border border-gray-100/60 p-6 z-10"
-          >
-            {/* Avatar */}
-            <div className="flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-orange-600 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-orange-200 mb-4">
-                CS
-              </div>
-              <h3 className="font-display font-bold text-gray-900 text-base leading-tight">Carlos Silva</h3>
-              <p className="text-sm text-gray-500 flex items-center gap-1.5 mt-1.5">
-                <Zap className="h-3.5 w-3.5 text-primary" />
-                Eletricista · São Paulo
-              </p>
-            </div>
-
-            {/* Stars */}
-            <div className="flex items-center justify-center gap-0.5 mt-4">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="h-4 w-4 fill-amber-400 text-amber-400" />
-              ))}
-              <span className="text-sm font-bold text-gray-900 ml-2">4.9</span>
-            </div>
-
-            {/* Stat chips */}
-            <div className="grid grid-cols-2 gap-2 mt-4">
-              <div className="bg-gray-50 rounded-xl p-3 text-center">
-                <div className="font-bold text-gray-900 text-sm">128</div>
-                <div className="text-[11px] text-gray-500">Serviços</div>
-              </div>
-              <div className="bg-orange-50 rounded-xl p-3 text-center">
-                <div className="font-bold text-primary text-sm flex items-center justify-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
-                  Livre
-                </div>
-                <div className="text-[11px] text-gray-500">Disponível</div>
-              </div>
-            </div>
-
-            {/* Hire CTA */}
-            <button className="w-full mt-4 bg-primary hover:bg-orange-600 text-white text-sm font-semibold py-2.5 rounded-xl shadow-sm shadow-orange-200 transition-colors">
-              Contratar agora
-            </button>
-          </motion.div>
-
-          {/* Floating notification cards */}
-          {ACTIVITY_CARDS.map((card) => (
-            <motion.div
-              key={card.id}
-              initial={card.initial}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: card.delay, ease: "easeOut" }}
-              className={`absolute ${card.position} flex items-center gap-3 bg-white/95 backdrop-blur-sm rounded-2xl border border-gray-100 shadow-lg px-4 py-3 z-20 max-w-[210px]`}
-            >
-              <div className={`w-9 h-9 rounded-xl ${card.iconBg} flex items-center justify-center flex-shrink-0`}>
-                <card.icon className={`h-4 w-4 ${card.iconColor}`} />
-              </div>
-              <div className="min-w-0">
-                <p className="text-xs font-semibold text-gray-900 leading-tight">{card.title}</p>
-                <p className="text-[11px] text-gray-500 mt-0.5">{card.sub}</p>
-              </div>
-              <span className={`w-1.5 h-1.5 rounded-full ${card.dot} flex-shrink-0 ml-auto`} />
-            </motion.div>
-          ))}
+        {/* ── Right: Live interactive tracking map (desktop) ── */}
+        <div className="hidden lg:block relative w-full max-w-[500px] justify-self-center">
+          <LiveTrackerMap userLocation={userLocation} isLocating={isLocating} />
         </div>
 
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default Hero;
