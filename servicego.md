@@ -28,6 +28,10 @@ Você vai adorar conhecer a fundo a estrutura deste projeto!
 
 # 🌟 ServiceGO: Conexão Segura e Rastreamento de Serviços
 
+<p align="center">
+  <img src="images/featured/logo.png" alt="ServiceGO Logo" width="180" height="180" style="border-radius: 40px;" />
+</p>
+
 O **ServiceGO** é um marketplace brasileiro que revoluciona a contratação de prestadores de serviços autônomos (encanadores, eletricistas, pintores, diaristas, técnicos e reformadores). O projeto foi concebido e aprimorado como um **Projeto de Extensão Universitária (UniFil)**, unindo conceitos avançados de engenharia de software à realidade social, entregando uma ferramenta com alta usabilidade, interatividade e conformidade legal.
 
 ---
