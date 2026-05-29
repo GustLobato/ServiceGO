@@ -9,7 +9,7 @@ categories: Blog
 tags: ["ADS", "ES", "CC", "Tecnologia", "Educação", "Geolocalização", "LGPD", "React"] 
 linkandroid: https://github.com/GustLobato/ServiceGO
 linkios: https://github.com/GustLobato/ServiceGO
-linkweb: http://localhost:8081/
+linkweb: https://servicego.online/
 linkblog: https://github.com/GustLobato/ServiceGO#readme
 linkvideo: https://github.com/GustLobato/ServiceGO
 
@@ -17,7 +17,7 @@ linkvideo: https://github.com/GustLobato/ServiceGO
 
 __Advertisement :smile:__
 
-- __[ServiceGO](http://localhost:8081/)__ - A maior e mais segura plataforma de contratação de profissionais autônomos da sua região.
+- __[ServiceGO](https://servicego.online/)__ - A maior e mais segura plataforma de contratação de profissionais autônomos da sua região.
 - __[UniFil Engenharia de Software / ADS](https://unifil.br/)__ - Projeto de Extensão Universitária focado em impacto social através da tecnologia.
 
 Você vai adorar conhecer a fundo a estrutura deste projeto!
@@ -89,7 +89,7 @@ O sistema dispõe de rotas otimizadas por *lazy loading*, reduzindo drasticament
    * **Solicitações:** Acompanhamento de serviços pendentes, aceitos e em andamento.
    * **Avaliações:** Gestão de reviews de serviços concluídos.
    * **Perfil:** Edição de dados, configurações de segurança e painel de privacidade de dados (LGPD).
-5. **`Política de Privacidade (/privacy)`**: Documento em linguagem simples explicando a coleta, termos de GPS e DPO (`privacidade@servicego.com.br`).
+5. **`Política de Privacidade (/privacy)`**: Documento em linguagem simples explicando a coleta, termos de GPS e DPO (`privacidade@servicego.online`).
 6. **`Termos de Uso (/terms)`**: Direitos de interposição, limitações da plataforma e regras de convivência.
 
 ---

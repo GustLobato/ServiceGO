@@ -179,10 +179,10 @@ const Terms = () => {
                   </p>
                 </div>
                 <a
-                  href="mailto:suporte@servicego.com.br"
+                  href="mailto:suporte@servicego.online"
                   className="text-xs font-bold text-primary hover:underline bg-white px-3 py-2 rounded-xl border border-gray-200 text-center"
                 >
-                  suporte@servicego.com.br
+                  suporte@servicego.online
                 </a>
               </div>
             </motion.div>

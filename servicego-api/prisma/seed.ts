@@ -9,11 +9,11 @@ async function main() {
   const adminPassword = await bcrypt.hash('ServiceGO@2026', 12);
 
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@servicego.com.br' },
+    where: { email: 'admin@servicego.online' },
     update: {},
     create: {
       name: 'Gustavo Gabriel',
-      email: 'admin@servicego.com.br',
+      email: 'admin@servicego.online',
       password: adminPassword,
       role: 'admin',
     },

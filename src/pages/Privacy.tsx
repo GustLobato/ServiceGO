@@ -190,10 +190,10 @@ const Privacy = () => {
                   </p>
                 </div>
                 <a
-                  href="mailto:privacidade@servicego.com.br"
+                  href="mailto:privacidade@servicego.online"
                   className="text-xs font-bold text-primary hover:underline bg-white px-3 py-2 rounded-xl border border-gray-200 text-center"
                 >
-                  privacidade@servicego.com.br
+                  privacidade@servicego.online
                 </a>
               </div>
             </motion.div>
